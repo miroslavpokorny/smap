@@ -1,0 +1,55 @@
+using System.Linq;
+using NUnit.Framework;
+using smap;
+
+namespace Test
+{
+    [TestFixture]
+    public class MetaDataTest
+    {
+        [Test]
+        public void ShouldCorrectlySerializeMetaData()
+        {
+            var metaData = new MetaData
+            {
+                TotalDataSize = 1,
+                DataChunkSize = 65300,
+                ChunkId = 400000,
+                Checksum = new byte[]
+                {
+                    0x14, 0x13, 0x12, 0x11, 0x10, 0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06,
+                    0x05, 0x04, 0x03, 0x02, 0x01
+                }
+            };
+
+            Assert.True(metaData.ToBytes().SequenceEqual(new byte[]
+            {
+                0x01, 0x00, 0x00, 0x00, // uint 1 little endian
+                0x14, 0xff, 0x00, 0x00, // uint 65300 little endian
+                0x80, 0x1A, 0x06, 0x00, // uint 400000 little endian
+                0x14, 0x13, 0x12, 0x11, 0x10, 0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04,
+                0x03, 0x02, 0x01
+            }));
+        }
+
+        [Test]
+        public void ShouldCorrectlyParseMetaData()
+        {
+            var bytes = new byte[]
+            {
+                0x03, 0x00, 0x00, 0x00, // uint 3 little endian
+                0x23, 0x7A, 0x08, 0x00, // uint 555555 little endian
+                0x00, 0xff, 0x00, 0xff, // uint 4278255360 little endian
+                0x14, 0x13, 0x12, 0x11, 0x10, 0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04,
+                0x03, 0x02, 0x01
+            };
+            var metaData = new MetaData();
+            metaData.Parse(bytes);
+            Assert.True(metaData.TotalDataSize == 3 && metaData.DataChunkSize == 555555 && metaData.ChunkId == 4278255360 && metaData.Checksum.SequenceEqual(new byte[]
+            {
+                0x14, 0x13, 0x12, 0x11, 0x10, 0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04,
+                0x03, 0x02, 0x01
+            }));
+        }
+    }
+}
