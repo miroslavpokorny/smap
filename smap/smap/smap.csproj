@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <PackageReference Include="Cambia.BaseN" Version="2.2.3" />
+      <PackageReference Include="ZXing.Net" Version="0.16.4" />
     </ItemGroup>
 
 </Project>
