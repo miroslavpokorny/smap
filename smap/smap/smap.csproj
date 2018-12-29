@@ -7,6 +7,9 @@
 
     <ItemGroup>
       <PackageReference Include="Cambia.BaseN" Version="2.2.3" />
+      <PackageReference Include="PDFsharp" Version="1.50.4845-RC2a" />
+      <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+      <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
       <PackageReference Include="ZXing.Net" Version="0.16.4" />
     </ItemGroup>
 

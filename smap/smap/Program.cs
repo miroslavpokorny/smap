@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using ZXing;
 using ZXing.QrCode;
 
@@ -10,6 +12,7 @@ namespace smap
     {
         static void Main(string[] args)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.WriteLine("Hello World!");
             var metaData = new MetaData
             {
@@ -27,8 +30,24 @@ namespace smap
 
             var pixelData = barcodeWriter.Write(Encoding.UTF8.GetString(metaData.ToBytes()));
 
-            var bmp = PixelDataHelper.PixelDataToBmp(pixelData);
-            File.WriteAllBytes("FirstBmp.bmp", bmp);
+            var bmp = PixelDataHelper.PixelDataToBmp(pixelData, 10);
+            var bmpStream = new MemoryStream(bmp);
+            // File.WriteAllBytes("FirstBmp.bmp", bmp);
+            
+            var document = new PdfDocument();
+            document.Info.Title = "Binary data backup";
+
+            var page = document.AddPage();
+            var gfx = XGraphics.FromPdfPage(page);
+            var font = new XFont("Consolas", 12, XFontStyle.Regular);
+            
+            gfx.DrawString("Hello world!", font, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+
+            var image = XImage.FromStream(bmpStream);
+            // A4 width: 595 pt ; height: 842 pt 
+            gfx.DrawImage(image, 0,0, 250, 250);
+            
+            document.Save("first.pdf");
         }
     }
 }
