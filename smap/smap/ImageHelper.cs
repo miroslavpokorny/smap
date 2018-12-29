@@ -1,13 +1,33 @@
-using System;
 using System.IO;
 using System.Text;
-using PdfSharp.Drawing;
 using ZXing.Rendering;
 
 namespace smap
 {
-    public static class PixelDataHelper
+    public static class ImageHelper
     {
+        public static byte[] ImageToByteArray(System.Drawing.Bitmap bitmap)
+        {
+            
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var binaryWriter = new BinaryWriter(memoryStream))
+                {
+                    for (var y = 0; y < bitmap.Height; y++)
+                    {
+                        for (var x = 0; x < bitmap.Width; x++)
+                        {
+                            var color = bitmap.GetPixel(x, y);
+                            binaryWriter.Write(color.R);
+                            binaryWriter.Write(color.G);
+                            binaryWriter.Write(color.B);
+                        }
+                    }                    
+                }
+                return memoryStream.ToArray();
+            }
+        }
+        
         /// <summary>
         /// Returns BMP file bytes according to format specified at https://en.wikipedia.org/wiki/BMP_file_format 
         /// </summary>
