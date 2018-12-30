@@ -131,7 +131,7 @@ namespace NeuralNetLearner
         private string[] FileAsData(string fileName)
         {
             var result = new string[1025];
-            result[0] = Path.GetFileName(fileName)[0].ToString();
+            result[0] = _alphabet.IndexOf(Path.GetFileName(fileName)[0]).ToString();
             using (var bitmap = System.Drawing.Image.FromFile(fileName) as Bitmap)
             {
                 if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
