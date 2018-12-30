@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SharpLearning.Neural" Version="0.29.0" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\smap\smap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="assets\**" />
+    </ItemGroup>
+
+</Project>
