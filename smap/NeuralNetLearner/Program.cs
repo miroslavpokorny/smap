@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using SharpLearning.InputOutput.Csv;
 
 namespace NeuralNetLearner
 {
@@ -6,9 +6,12 @@ namespace NeuralNetLearner
     {
         static void Main(string[] args)
         {
-            Directory.CreateDirectory("assets");
+//            Directory.CreateDirectory("assets");
             var dataGenerator = new DataGenerator();
-            dataGenerator.GenerateLearningData();
+//            dataGenerator.GenerateLearningData();
+//            dataGenerator.GenerateCsv();
+
+            
         }
     }
 }

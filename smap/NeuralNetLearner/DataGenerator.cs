@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.InputOutput.Csv;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using ZXing;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace NeuralNetLearner
@@ -109,7 +113,40 @@ namespace NeuralNetLearner
                     Enumerable.Range(_minY, _maxY - _minY).Select(y => new PointF(x, y)));
             }
         }
-        
-        
+
+
+        public void GenerateCsv()
+        {
+            var columnNameToIndex = new Dictionary<string, int>();
+            columnNameToIndex["class"] = 0;
+            for (var i = 1; i <= 1024; i++)
+            {
+                columnNameToIndex[$"pixel{i}"] = i;
+            }
+            var writer = new CsvWriter(() => new StreamWriter(new FileStream("data.csv", FileMode.Create)));
+            
+            writer.Write(Directory.GetFiles("assets").Select(fileName => new CsvRow(columnNameToIndex, FileAsData(fileName))));
+        }
+
+        private string[] FileAsData(string fileName)
+        {
+            var result = new string[1025];
+            result[0] = Path.GetFileName(fileName)[0].ToString();
+            using (var bitmap = System.Drawing.Image.FromFile(fileName) as Bitmap)
+            {
+                if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
+                var index = 1;
+                for (var y = 0; y < 32; y++)
+                {
+                    for (var x = 0; x < 32; x++)
+                    {
+                        var color = bitmap.GetPixel(x, y);
+                        result[index++] = ((color.R + color.G + color.B) / 3).ToString();
+                    }
+                }                
+            }
+
+            return result;
+        }
     }
 }
