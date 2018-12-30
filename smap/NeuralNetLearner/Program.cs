@@ -8,14 +8,14 @@ namespace NeuralNetLearner
         static void Main(string[] args)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-//            Directory.CreateDirectory("assets");
+            Directory.CreateDirectory("assets");
             var dataGenerator = new DataGenerator();
             Console.WriteLine("Generating learning data");            
-//            dataGenerator.GenerateLearningData();
+            dataGenerator.GenerateLearningData();
             var time1 = stopwatch.Elapsed;
             Console.WriteLine($"Done in {time1}");
             Console.WriteLine("Generating csv file");
-//            dataGenerator.GenerateCsv();
+            dataGenerator.GenerateCsv();
             var time2 = stopwatch.Elapsed;
             Console.WriteLine($"Done in {time2 - time1}");
             var networkHelper = new NetworkHelper("data.csv");

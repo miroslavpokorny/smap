@@ -4,12 +4,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using SharpLearning.Containers.Extensions;
 using SharpLearning.InputOutput.Csv;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using ZXing;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace NeuralNetLearner
