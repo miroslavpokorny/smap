@@ -12,8 +12,8 @@ namespace smap
 {
     public class DataOutput
     {
-        private const int MaxLettersPerRow = 58;
-        private const int MaxRowsPerPage = 48;
+        public const int MaxLettersPerRow = 58;
+        public const int MaxRowsPerPage = 48;
         private const int MaxLettersPerPage = MaxLettersPerRow * MaxRowsPerPage;
         
         private readonly byte[] _data;

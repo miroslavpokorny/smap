@@ -1,4 +1,7 @@
 using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace smap
 {
@@ -39,5 +42,31 @@ namespace smap
             
             return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
         }
+
+        public static SixLabors.Primitives.Rectangle GetContentArea(this Image<Rgba32> image)
+        {
+            var minX = image.Width;
+            var maxX = 0;
+            var minY = image.Height;
+            var maxY = 0;
+
+            for (var y = 0; y < image.Height; y++)
+            {
+                var row = image.GetPixelRowSpan(y);
+                for (var x = 0; x < row.Length; x++)
+                {
+                    var pixel = row[x];
+                    var color = (pixel.R + pixel.G + pixel.B) / 3;
+                    if (color > 128) continue;
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+            
+            return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+        }
+        
     }
 }

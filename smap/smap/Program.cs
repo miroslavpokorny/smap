@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Text;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Neural.Models;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Processing;
-using ZXing;
+using SixLabors.Primitives;
 
 namespace smap
 {
@@ -22,36 +18,70 @@ namespace smap
 //            var dataOutput = new DataOutput(File.ReadAllBytes("./assets/Database.kdbx"));
 //            dataOutput.SaveDataAsPdf("Database.pdf");
 
-            // ReadQrCode();
+            var qrReader = new QrReader();
+            var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
-            var model = ClassificationNeuralNetModel.Load(() => new StreamReader("../NeuralNetLearner/network.xml"));
-
-            var csvReader = new CsvParser(() =>
+            using (var image = SixLabors.ImageSharp.Image.Load("assets/Database01.jpg"))
             {
-                var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
-                for (var i = 1; i <= 1024; i++)
+                image.Mutate(x => x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY, x.GetCurrentSize().Width - 1, x.GetCurrentSize().Height - qrData.QrCodeBottomPositionY - 1)));
+                var contentArea = image.GetContentArea();
+                image.Mutate(x => x.Crop(contentArea));
+
+                var letterWidth = image.Width / (double)DataOutput.MaxLettersPerRow;
+                var letterHeight = image.Height / (double)DataOutput.MaxRowsPerPage;
+
+                for (var y = 0; y < DataOutput.MaxRowsPerPage; y++)
                 {
-                    columnNameToIndex[$"pixel{i}"] = i;
+                    for (var x = 0; x < DataOutput.MaxLettersPerRow; x++)
+                    {
+                        var posX = x * letterWidth;
+                        var posY = y * letterHeight;
+                        var letterImage = image.Clone(img =>
+                            img.Crop(new SixLabors.Primitives.Rectangle((int) posX, (int) posY, (int) letterWidth, (int) letterHeight)));
+
+                        
+//                        using (var fileStream = new FileStream($"../assets/temp/{y:D4}_{x:D4}.jpg", FileMode.Create))
+//                        {
+//                            letterImage.SaveAsJpeg(fileStream);
+//                        }
+                    }
                 }
 
-                var memoryStream = new MemoryStream();
-                var csvWriter = new CsvWriter(() => new StreamWriter(memoryStream, Encoding.Default, 4096, true));
-                csvWriter.Write(new[] {"3.jpg", "D.jpg", "N.jpg", "U.jpg", "V.jpg"}.Select(fileName =>
-                    new CsvRow(columnNameToIndex, FileAsData(fileName))));
-                memoryStream.Seek(0, 0);
-                return new StreamReader(memoryStream);
-            });
-            
-            var targetName = "class";
+//                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
+//                {
+//                    image.SaveAsJpeg(fileStream);                    
+//                }
 
-            var featureNames = csvReader.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
+            }
 
-            var testObservations = csvReader.EnumerateRows(featureNames).ToF64Matrix();
-            var testTargets = csvReader.EnumerateRows(targetName).ToF64Vector();
-            
-            testObservations.Map(p => p / 255);
-
-            var predictions = model.Predict(testObservations);
+//            var model = ClassificationNeuralNetModel.Load(() => new StreamReader("../NeuralNetLearner/network.xml"));
+//
+//            var csvReader = new CsvParser(() =>
+//            {
+//                var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
+//                for (var i = 1; i <= 1024; i++)
+//                {
+//                    columnNameToIndex[$"pixel{i}"] = i;
+//                }
+//
+//                var memoryStream = new MemoryStream();
+//                var csvWriter = new CsvWriter(() => new StreamWriter(memoryStream, Encoding.Default, 4096, true));
+//                csvWriter.Write(new[] {"3.jpg", "D.jpg", "N.jpg", "U.jpg", "V.jpg"}.Select(fileName =>
+//                    new CsvRow(columnNameToIndex, FileAsData(fileName))));
+//                memoryStream.Seek(0, 0);
+//                return new StreamReader(memoryStream);
+//            });
+//            
+//            var targetName = "class";
+//
+//            var featureNames = csvReader.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
+//
+//            var testObservations = csvReader.EnumerateRows(featureNames).ToF64Matrix();
+//            var testTargets = csvReader.EnumerateRows(targetName).ToF64Vector();
+//            
+//            testObservations.Map(p => p / 255);
+//
+//            var predictions = model.Predict(testObservations);
 
         }
         
@@ -89,20 +119,6 @@ namespace smap
             }
 
             return result;
-        }
-
-        private static void ReadQrCode()
-        {
-            var barcodeReader = new BarcodeReader();
-            
-            var bitmap = Image.FromFile("FirstBmp.bmp") as Bitmap;
-            if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
-            
-            var bitmapSource = new RGBLuminanceSource(ImageHelper.ImageToByteArray(bitmap), bitmap.Width, bitmap.Height);
-            var result = barcodeReader.Decode(bitmapSource);
-            
-            var readMetaData = new MetaData();
-            readMetaData.Parse(Encoding.UTF8.GetBytes(result.Text));
         }
 
         private static string GenerateRandomString(int strLen)
