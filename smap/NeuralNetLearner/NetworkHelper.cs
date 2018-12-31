@@ -47,7 +47,7 @@ namespace NeuralNetLearner
 
         public ClassificationNeuralNetModel LearnNetwork()
         {
-            var learner = new ClassificationNeuralNetLearner(GetNeuralNetwork(), iterations: 10, loss: new AccuracyLoss());
+            var learner = new ClassificationNeuralNetLearner(GetNeuralNetwork(), iterations: 100, loss: new AccuracyLoss());
             return learner.Learn(_trainingObservations, _trainingTargets);
         }
     }

@@ -4,8 +4,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using MathNet.Numerics.Random;
 using SharpLearning.InputOutput.Csv;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
@@ -24,27 +27,56 @@ namespace NeuralNetLearner
                 _letter = letter;
                 GenerateBaseLetters();
             }
-            GenerateBlurLetters();
-            GenerateRotatedLetters();
+            // GenerateBlurLetters();
+            // GenerateRotatedLetters();
+        }
+
+        private class GenerateLetterData
+        {
+            public int FontSize { get; set; }
+            public int OffsetX { get; set; }
+            public int OffsetY { get; set; }
         }
 
         private void GenerateBaseLetters()
         {
             var counter = 0;
-            foreach (var pointF in new Offset(-6, 7, -10, -6).GetOffsets())
+            foreach (var data in new GenerateLetterData[]
+            {
+                new GenerateLetterData { FontSize = 26, OffsetX = 0, OffsetY = -8 },
+                new GenerateLetterData { FontSize = 20, OffsetX = 3, OffsetY = -5 },
+                new GenerateLetterData { FontSize = 18, OffsetX = 6, OffsetY = 0 },
+                new GenerateLetterData { FontSize = 14, OffsetX = 8, OffsetY = 0 },
+                new GenerateLetterData { FontSize = 12, OffsetX = 10, OffsetY = 0 }
+            })
             {
                 var bitmap = new Bitmap(32, 32);
                 using (var graphics = Graphics.FromImage(bitmap))
                 {                
                     graphics.FillRectangle(Brushes.White, 0, 0, 32, 32);                       
-                    using (var font = new Font("Consolas", 26))
+                    using (var font = new Font("Consolas", data.FontSize))
                     {
-                        graphics.DrawString(_letter.ToString(), font, Brushes.Black, pointF);
+                        graphics.DrawString(_letter.ToString(), font, Brushes.Black, data.OffsetX, data.OffsetY);
                     }
-                }
                 
-                bitmap.Save($"assets/{_letter}_{++counter:D3}.bmp", ImageFormat.Bmp);
+                    bitmap.Save($"assets/{_letter}_{++counter:D3}.bmp", ImageFormat.Bmp);
+                }                
             }
+            
+//            foreach (var pointF in new Offset(-6, 7, -10, -6).GetOffsets())
+//            {
+//                var bitmap = new Bitmap(32, 32);
+//                using (var graphics = Graphics.FromImage(bitmap))
+//                {                
+//                    graphics.FillRectangle(Brushes.White, 0, 0, 32, 32);                       
+//                    using (var font = new Font("Consolas", 26))
+//                    {
+//                        graphics.DrawString(_letter.ToString(), font, Brushes.Black, pointF);
+//                    }
+//                }
+//                
+//                bitmap.Save($"assets/{_letter}_{++counter:D3}.bmp", ImageFormat.Bmp);
+//            }
         }
 
         private void GenerateBlurLetters()
@@ -133,15 +165,30 @@ namespace NeuralNetLearner
             using (var bitmap = System.Drawing.Image.FromFile(fileName) as Bitmap)
             {
                 if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
-                var index = 1;
-                for (var y = 0; y < 32; y++)
+                bitmap.Threshold(128);
+                var contentArea = bitmap.GetContentArea();
+                using (var memoryStream = new MemoryStream())
                 {
-                    for (var x = 0; x < 32; x++)
+                    bitmap.Save(memoryStream, ImageFormat.Bmp);
+                    memoryStream.Seek(0, 0);
+                    using (var image = Image.Load(memoryStream))
                     {
-                        var color = bitmap.GetPixel(x, y);
-                        result[index++] = ((color.R + color.G + color.B) / 3).ToString();
+                        image.Mutate(x => x.Crop(contentArea).Resize(32, 32));
+                        using (var modifiedImageMemoryStream = new MemoryStream())
+                        {
+                            image.SaveAsBmp(modifiedImageMemoryStream);
+                            var index = 1;
+                            for (var y = 0; y < 32; y++)
+                            {
+                                var row = image.GetPixelRowSpan(y);
+                                foreach (var pixel in row)
+                                {
+                                    result[index++] = ((pixel.R + pixel.G + pixel.B) / 3).ToString();
+                                }
+                            }
+                        }
                     }
-                }                
+                }
             }
 
             return result;
