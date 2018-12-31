@@ -14,7 +14,7 @@ namespace smap
     {
         public const int MaxLettersPerRow = 58;
         public const int MaxRowsPerPage = 48;
-        private const int MaxLettersPerPage = MaxLettersPerRow * MaxRowsPerPage;
+        public const int MaxLettersPerPage = MaxLettersPerRow * MaxRowsPerPage;
         
         private readonly byte[] _data;
         private readonly SHA1 _sha1CryptoServiceProvider;
