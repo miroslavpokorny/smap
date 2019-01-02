@@ -67,6 +67,63 @@ namespace smap
             
             return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
         }
-        
+
+        public static SixLabors.Primitives.Rectangle GetNextLetterContentArea(this Image<Rgba32> image, int offsetX)
+        {
+            var minX = offsetX;
+            for (var x = minX; x < image.Width; x++)
+            {
+                if (!IsVerticalLineWhite(image, x))
+                {
+                    break;
+                }
+                minX = x;
+            }
+
+            var maxX = minX + 1;
+            for (var x = maxX; x < image.Width; x++)
+            {
+                if (IsVerticalLineWhite(image, x))
+                {
+                    break;
+                }
+                maxX = x;
+            }
+            
+            var minY = image.Height;
+            var maxY = 0;
+
+            for (var y = 0; y < image.Height; y++)
+            {
+                var row = image.GetPixelRowSpan(y);
+                for (var x = minX; x <= maxX; x++)
+                {
+                    var pixel = row[x];
+                    var color = (pixel.R + pixel.G + pixel.B) / 3;
+                    if (color > 128) continue;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+            
+            return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+        }
+
+        private static bool IsVerticalLineWhite(Image<Rgba32> image, int x)
+        {
+            var pixels = image.GetPixelSpan();
+            for (var y = 0; y < image.Height; y++)
+            {
+                var index = x + y * image.Width;
+                var pixel = pixels[index];
+                var color = (pixel.R + pixel.G + pixel.B) / 3;
+                if (color < 128)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

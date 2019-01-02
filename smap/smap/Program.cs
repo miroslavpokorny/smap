@@ -57,14 +57,17 @@ namespace smap
                     rowArea.Width += margin;
                     rowArea.X = rowArea.X - margin;
                     rowImage.Mutate(x => x.Crop(rowArea).BackgroundColor(Rgba32.White));
+
+
+                    var nextX = 0;
                     for (var x = 0; x < DataOutput.MaxLettersPerRow; x++)
                     {
-                        var posX = x * rowImage.Width / (double)DataOutput.MaxLettersPerRow;
 
+                        var nextLetterContentArea = rowImage.GetNextLetterContentArea(nextX);
+                        nextX = nextLetterContentArea.X + nextLetterContentArea.Width;
+                        
                         var letterImage = rowImage.Clone(img =>
-                            img.Crop(new SixLabors.Primitives.Rectangle((int) posX, 0,
-                                (int) (img.GetCurrentSize().Width / (double) DataOutput.MaxLettersPerRow),
-                                img.GetCurrentSize().Height)).BackgroundColor(Rgba32.White));
+                            img.Crop(nextLetterContentArea));
 
                         using (var memoryStream = new MemoryStream())
                         {
