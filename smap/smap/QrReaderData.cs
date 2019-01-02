@@ -4,5 +4,6 @@ namespace smap
     {
         public MetaData MetaData { get; set; }
         public int QrCodeBottomPositionY { get; set; }
+        public double PageRotation { get; set; }
     }
 }

@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using System.Text;
+using SharpLearning.Containers.Extensions;
 using ZXing;
+using ZXing.QrCode.Internal;
 
 namespace smap
 {
@@ -29,10 +33,24 @@ namespace smap
                 if (resultResultPoint.Y < minY) minY = (int) resultResultPoint.Y;
             }
 
+            var points = result.ResultPoints.ToList();
+            points.Sort((a, b) => a.X < b.X ? -1 : a.X > b.X ? 1 : a.Y < b.Y ? -1 : a.Y > b.Y ? 1 : 0);
+
+            var upperLeftPoint = points[0];
+            var lowerLeftPoint = points[1];
+
+            if (upperLeftPoint.Y > lowerLeftPoint.Y)
+            {
+                var tmp = upperLeftPoint;
+                upperLeftPoint = lowerLeftPoint;
+                lowerLeftPoint = tmp;
+            }
+
             return new QrReaderData
             {
                 MetaData = readMetaData,
-                QrCodeBottomPositionY = maxY + (maxY - minY) / 5
+                QrCodeBottomPositionY = maxY + (maxY - minY) / 5,
+                PageRotation = (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 ? 0 : upperLeftPoint.X < lowerLeftPoint.X ? 1 : -1) * Math.Tan(Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * (180/Math.PI)
             };
         } 
     }

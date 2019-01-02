@@ -10,6 +10,7 @@ using SharpLearning.InputOutput.Csv;
 using SharpLearning.Neural.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace smap
@@ -33,23 +34,37 @@ namespace smap
             
             using (var image = SixLabors.ImageSharp.Image.Load("assets/Database01.jpg"))
             {
-                image.Mutate(x => x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY, x.GetCurrentSize().Width - 1, x.GetCurrentSize().Height - qrData.QrCodeBottomPositionY - 1)));
+                image.Mutate(x =>
+                    x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY,
+                            x.GetCurrentSize().Width - 1, x.GetCurrentSize().Height - qrData.QrCodeBottomPositionY - 1))
+                        .Rotate((float) qrData.PageRotation).BackgroundColor(Rgba32.White));
                 var contentArea = image.GetContentArea();
                 image.Mutate(x => x.Crop(contentArea));
 
                 // TODO replace constants with data from metaData
-                var letterWidth = image.Width / (double)DataOutput.MaxLettersPerRow;
+                // var letterWidth = image.Width / (double)DataOutput.MaxLettersPerRow;
                 var letterHeight = image.Height / (double)DataOutput.MaxRowsPerPage;
 
                 var letters = new List<CsvRow>(DataOutput.MaxLettersPerPage);
                 for (var y = 0; y < DataOutput.MaxRowsPerPage; y++)
                 {
+                    var posY = y * letterHeight;
+                    var rowImage = image.Clone(img =>
+                        img.Crop(new SixLabors.Primitives.Rectangle(0, (int) posY, img.GetCurrentSize().Width,
+                            (int) letterHeight)));
+                    var rowArea = rowImage.GetContentArea();
+                    var margin = (int) (rowArea.Width / (double) DataOutput.MaxRowsPerPage / 3);
+                    rowArea.Width += margin;
+                    rowArea.X = rowArea.X - margin;
+                    rowImage.Mutate(x => x.Crop(rowArea).BackgroundColor(Rgba32.White));
                     for (var x = 0; x < DataOutput.MaxLettersPerRow; x++)
                     {
-                        var posX = x * letterWidth;
-                        var posY = y * letterHeight;
-                        var letterImage = image.Clone(img =>
-                            img.Crop(new SixLabors.Primitives.Rectangle((int) posX, (int) posY, (int) letterWidth, (int) letterHeight)));
+                        var posX = x * rowImage.Width / (double)DataOutput.MaxLettersPerRow;
+
+                        var letterImage = rowImage.Clone(img =>
+                            img.Crop(new SixLabors.Primitives.Rectangle((int) posX, 0,
+                                (int) (img.GetCurrentSize().Width / (double) DataOutput.MaxLettersPerRow),
+                                img.GetCurrentSize().Height)).BackgroundColor(Rgba32.White));
 
                         using (var memoryStream = new MemoryStream())
                         {
@@ -57,10 +72,10 @@ namespace smap
                             memoryStream.Seek(0, 0);
                             letters.Add(new CsvRow(columnNameToIndex, FileAsData(memoryStream)));                            
                         }
-//                        using (var fileStream = new FileStream($"../assets/temp/{y:D4}_{x:D4}.jpg", FileMode.Create))
-//                        {
-//                            letterImage.SaveAsJpeg(fileStream);
-//                        }
+                        using (var fileStream = new FileStream($"../assets/temp/{y:D4}_{x:D4}.jpg", FileMode.Create))
+                        {
+                            letterImage.SaveAsJpeg(fileStream);
+                        }
                     }
                 }
 //                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
@@ -131,8 +146,10 @@ namespace smap
                             for (var y = 0; y < 32; y++)
                             {
                                 var row = image.GetPixelRowSpan(y);
-                                foreach (var pixel in row)
+                                for (var x = 0; x < 32; x++)
                                 {
+                                    var pixel = row[x];
+                                    
                                     result[index++] = ((pixel.R + pixel.G + pixel.B) / 3).ToString();
                                 }
                             }

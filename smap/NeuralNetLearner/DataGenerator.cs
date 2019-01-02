@@ -181,8 +181,10 @@ namespace NeuralNetLearner
                             for (var y = 0; y < 32; y++)
                             {
                                 var row = image.GetPixelRowSpan(y);
-                                foreach (var pixel in row)
+                                for (var x = 0; x < 32; x++)
                                 {
+                                    var pixel = row[x];
+                                    
                                     result[index++] = ((pixel.R + pixel.G + pixel.B) / 3).ToString();
                                 }
                             }
