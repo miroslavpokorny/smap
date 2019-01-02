@@ -46,7 +46,7 @@ namespace smap
                 }
             };
 
-            var pixelData = barcodeWriter.Write(Encoding.UTF8.GetString(metaData.ToBytes()));
+            var pixelData = barcodeWriter.Write(Encoder.EncodeBase64(metaData.ToBytes()));
 
             var bmpImage = ImageHelper.PixelDataToBmp(pixelData, 10);
             return new MemoryStream(bmpImage);

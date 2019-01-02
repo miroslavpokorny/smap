@@ -23,7 +23,7 @@ namespace smap
             var result = barcodeReader.Decode(bitmapSource);
             
             var readMetaData = new MetaData();
-            readMetaData.Parse(Encoding.UTF8.GetBytes(result.Text));
+            readMetaData.Parse(Decoder.DecodeBase64(result.Text));
 
             var maxY = 0;
             var minY = bitmap.Height;
@@ -49,7 +49,7 @@ namespace smap
             return new QrReaderData
             {
                 MetaData = readMetaData,
-                QrCodeBottomPositionY = maxY + (maxY - minY) / 5,
+                QrCodeBottomPositionY = maxY + (maxY - minY) / 2,
                 PageRotation = (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 ? 0 : upperLeftPoint.X < lowerLeftPoint.X ? 1 : -1) * Math.Tan(Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * (180/Math.PI)
             };
         } 

@@ -24,7 +24,8 @@ namespace smap
 //            dataOutput.SaveDataAsPdf("Database.pdf");
 
             var qrReader = new QrReader();
-            var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
+            var qrData = qrReader.ReadQrCode("assets/Database-page-001.jpg");
+            // var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
             var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
             for (var i = 1; i <= 1024; i++)
