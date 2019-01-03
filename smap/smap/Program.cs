@@ -25,7 +25,7 @@ namespace smap
 //            dataOutput.SaveDataAsPdf("Database.pdf");
 
             var qrReader = new QrReader();
-            var qrData = qrReader.ReadQrCode("assets/Database-page-002.jpg");
+            var qrData = qrReader.ReadQrCode("assets/Database02.jpg");
             // var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
             var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
@@ -39,9 +39,14 @@ namespace smap
                 image.Mutate(x =>
                     x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY,
                             x.GetCurrentSize().Width - 1, x.GetCurrentSize().Height - qrData.QrCodeBottomPositionY - 1))
-                        .Rotate((float) - qrData.PageRotation).BackgroundColor(Rgba32.White));
+                        .Rotate((float) qrData.PageRotation).BackgroundColor(Rgba32.White));
                 var contentArea = image.GetContentArea();
                 image.Mutate(x => x.Crop(contentArea));
+                
+                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
+                {
+                    image.SaveAsJpeg(fileStream);                    
+                }
 
                 // TODO replace constants with data from metaData
 
@@ -61,6 +66,10 @@ namespace smap
                     rowArea.X = rowArea.X - margin;
                     rowImage.Mutate(x => x.Crop(rowArea).BackgroundColor(Rgba32.White));
 
+                    using (var fileStream = new FileStream($"../assets/temp/rows/row_{y:D2}.jpg", FileMode.Create))
+                    {
+                        rowImage.SaveAsJpeg(fileStream);
+                    }
 
                     var currentRowLetters = y == rowsPerPage - 1
                         ? qrData.MetaData.DataChunkSize - DataOutput.MaxLettersPerRow * y : DataOutput.MaxLettersPerRow;
@@ -84,10 +93,6 @@ namespace smap
                             letterImage.SaveAsJpeg(fileStream);
                         }
                     }
-                }
-                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
-                {
-                    image.SaveAsJpeg(fileStream);                    
                 }
 
                 var csvReader = new CsvParser(() =>

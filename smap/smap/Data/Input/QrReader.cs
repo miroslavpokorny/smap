@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using smap.Helpers;
 using ZXing;
@@ -14,6 +15,7 @@ namespace smap.Data.Input
             
             var bitmap = Image.FromFile(filePath) as Bitmap;
             if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
+            bitmap = bitmap.Clone(new Rectangle(0, 0, bitmap.Width / 5, bitmap.Height / 8), PixelFormat.Format24bppRgb);
             
             var bitmapSource = new RGBLuminanceSource(ImageHelper.ImageToByteArray(bitmap), bitmap.Width, bitmap.Height);
             var result = barcodeReader.Decode(bitmapSource);
@@ -45,7 +47,7 @@ namespace smap.Data.Input
             return new QrReaderData
             {
                 MetaData = readMetaData,
-                QrCodeBottomPositionY = maxY + (maxY - minY) / 2,
+                QrCodeBottomPositionY = maxY + (maxY - minY) / 4,
                 PageRotation = (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 ? 0 : upperLeftPoint.X < lowerLeftPoint.X ? -1 : 1) * Math.Tan(Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * (180/Math.PI)
             };
         } 
