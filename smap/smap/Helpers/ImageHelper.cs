@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 using ZXing.Rendering;
 
-namespace smap
+namespace smap.Helpers
 {
     public static class ImageHelper
     {

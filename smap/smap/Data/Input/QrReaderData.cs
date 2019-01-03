@@ -1,4 +1,4 @@
-namespace smap
+namespace smap.Data.Input
 {
     public class QrReaderData
     {

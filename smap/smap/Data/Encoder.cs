@@ -2,7 +2,7 @@ using System.Numerics;
 using Cambia.BaseN;
 using SmapCommon;
 
-namespace smap
+namespace smap.Data
 {
     public static class Encoder
     {

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using smap.Data.Input;
+using smap.Data.Output;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Neural.Models;

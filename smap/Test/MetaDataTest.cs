@@ -1,6 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using smap;
+using smap.Data;
 
 namespace Test
 {

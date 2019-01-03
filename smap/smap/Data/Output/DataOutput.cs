@@ -4,12 +4,13 @@ using System.Security.Cryptography;
 using System.Text;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using smap.Helpers;
 using SmapCommon.Extensions;
 using ZXing;
 using ZXing.QrCode;
 using ZXing.QrCode.Internal;
 
-namespace smap
+namespace smap.Data.Output
 {
     public class DataOutput
     {

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace smap
+namespace smap.Data
 {
     public class MetaData
     {

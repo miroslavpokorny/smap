@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using SharpLearning.Containers.Extensions;
+using smap.Helpers;
 using ZXing;
-using ZXing.QrCode.Internal;
 
-namespace smap
+namespace smap.Data.Input
 {
     public class QrReader
     {
