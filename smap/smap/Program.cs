@@ -25,7 +25,7 @@ namespace smap
 //            dataOutput.SaveDataAsPdf("Database.pdf");
 
             var qrReader = new QrReader();
-            var qrData = qrReader.ReadQrCode("assets/Database02.jpg");
+            var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
             // var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
             var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
@@ -34,7 +34,7 @@ namespace smap
                 columnNameToIndex[$"pixel{i}"] = i;
             }
             
-            using (var image = Image.Load("assets/Database02.jpg"))
+            using (var image = Image.Load("assets/Database01.jpg"))
             {
                 image.Mutate(x =>
                     x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY,
@@ -51,20 +51,16 @@ namespace smap
                 // TODO replace constants with data from metaData
 
                 var rowsPerPage = (int) Math.Ceiling(qrData.MetaData.DataChunkSize / (double) DataOutput.MaxLettersPerRow);
-                var letterHeight = image.Height / (double) rowsPerPage;
+                // var letterHeight = image.Height / (double) rowsPerPage;
 
                 var letters = new List<CsvRow>((int) qrData.MetaData.DataChunkSize);
+                var nextY = 0;
                 for (var y = 0; y < rowsPerPage; y++)
                 {
-                    var posY = y * letterHeight;
-                    var rowImage = image.Clone(img =>
-                        img.Crop(new SixLabors.Primitives.Rectangle(0, (int) posY, img.GetCurrentSize().Width,
-                            (int) letterHeight)));
-                    var rowArea = rowImage.GetContentArea();
-                    var margin = (int) (rowArea.Width / (double) DataOutput.MaxRowsPerPage / 3);
-                    rowArea.Width += margin;
-                    rowArea.X = rowArea.X - margin;
-                    rowImage.Mutate(x => x.Crop(rowArea).BackgroundColor(Rgba32.White));
+                    var nextRowContentArea = image.GetNextRowContentArea(nextY);
+                    nextY = nextRowContentArea.Y + nextRowContentArea.Height;
+
+                    var rowImage = image.Clone(img => img.Crop(nextRowContentArea));
 
                     using (var fileStream = new FileStream($"../assets/temp/rows/row_{y:D2}.jpg", FileMode.Create))
                     {

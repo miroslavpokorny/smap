@@ -109,6 +109,49 @@ namespace SmapCommon.Extensions
             return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
         }
 
+        public static SixLabors.Primitives.Rectangle GetNextRowContentArea(this Image<Rgba32> image, int offsetY)
+        {
+            var minY = offsetY;
+            for (var y = minY; y < image.Height; y++)
+            {
+                if (!IsHorizontalLineWhite(image, y))
+                {
+                    break;
+                }
+
+                minY = y;
+            }
+
+            var maxY = minY + 1;
+            for (var y = maxY; y < image.Height; y++)
+            {
+                if (IsHorizontalLineWhite(image, y))
+                {
+                    break;
+                }
+
+                maxY = y;
+            }
+
+            var minX = image.Width;
+            var maxX = 0;
+            
+            for (var y = minY; y <= maxY; y++)
+            {
+                var row = image.GetPixelRowSpan(y);
+                for (var x = 0; x < row.Length; x++)
+                {
+                    var pixel = row[x];
+                    var color = (pixel.R + pixel.G + pixel.B) / 3;
+                    if (color > 128) continue;
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                }
+            }
+            
+            return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+        }
+
         private static bool IsVerticalLineWhite(Image<Rgba32> image, int x)
         {
             var pixels = image.GetPixelSpan();
@@ -116,6 +159,21 @@ namespace SmapCommon.Extensions
             {
                 var index = x + y * image.Width;
                 var pixel = pixels[index];
+                var color = (pixel.R + pixel.G + pixel.B) / 3;
+                if (color < 128)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool IsHorizontalLineWhite(Image<Rgba32> image, int y)
+        {
+            var row = image.GetPixelRowSpan(y);
+            foreach (var pixel in row)
+            {
                 var color = (pixel.R + pixel.G + pixel.B) / 3;
                 if (color < 128)
                 {
