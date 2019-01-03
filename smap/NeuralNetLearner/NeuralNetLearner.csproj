@@ -11,10 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\smap\smap.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="assets\**" />
     </ItemGroup>
 
@@ -24,6 +20,10 @@
 
     <ItemGroup>
       <None Remove="assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SmapCommon\SmapCommon.csproj" />
     </ItemGroup>
 
 </Project>

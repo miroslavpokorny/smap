@@ -132,7 +132,6 @@ namespace smap
 
             public Pixel GetEnlargedPixelAt(int x, int y)
             {
-                // TODO write this method correctly
                 return _pixels[x / _enlargeMultiplier][y / _enlargeMultiplier];
             }
         }

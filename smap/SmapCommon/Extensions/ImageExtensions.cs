@@ -1,9 +1,9 @@
-using System.Drawing;
+﻿using System.Drawing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace smap
+namespace SmapCommon.Extensions
 {
     public static class ImageExtensions
     {
@@ -18,7 +18,7 @@ namespace smap
                 }
             }
         }
-
+        
         public static SixLabors.Primitives.Rectangle GetContentArea(this Bitmap bitmap)
         {
             var minX = bitmap.Width;
@@ -42,7 +42,7 @@ namespace smap
             
             return new SixLabors.Primitives.Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
         }
-
+        
         public static SixLabors.Primitives.Rectangle GetContentArea(this Image<Rgba32> image)
         {
             var minX = image.Width;

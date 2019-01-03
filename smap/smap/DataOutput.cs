@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using SmapCommon.Extensions;
 using ZXing;
 using ZXing.QrCode;
 using ZXing.QrCode.Internal;

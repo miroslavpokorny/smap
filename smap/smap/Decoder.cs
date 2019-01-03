@@ -1,4 +1,5 @@
 using Cambia.BaseN;
+using SmapCommon;
 
 namespace smap
 {

@@ -4,20 +4,20 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using MathNet.Numerics.Random;
 using SharpLearning.InputOutput.Csv;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SmapCommon;
+using SmapCommon.Extensions;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace NeuralNetLearner
 {
     public class DataGenerator
     {
-        private readonly string _alphabet = smap.Alphabet.Base32Alphabet.ToString();
+        private readonly string _alphabet = Alphabet.Base32Alphabet.ToString();
         private char _letter;
         
         public void GenerateLearningData()
@@ -155,45 +155,9 @@ namespace NeuralNetLearner
             }
             var writer = new CsvWriter(() => new StreamWriter(new FileStream("data.csv", FileMode.Create)));
             
-            writer.Write(Directory.GetFiles("assets").Select(fileName => new CsvRow(columnNameToIndex, FileAsData(fileName))));
+            writer.Write(Directory.GetFiles("assets").Select(fileName => new CsvRow(columnNameToIndex, LoadImageHelper.FileAsData(fileName))));
         }
 
-        private string[] FileAsData(string fileName)
-        {
-            var result = new string[1025];
-            result[0] = _alphabet.IndexOf(Path.GetFileName(fileName)[0]).ToString();
-            using (var bitmap = System.Drawing.Image.FromFile(fileName) as Bitmap)
-            {
-                if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
-                bitmap.Threshold(128);
-                var contentArea = bitmap.GetContentArea();
-                using (var memoryStream = new MemoryStream())
-                {
-                    bitmap.Save(memoryStream, ImageFormat.Bmp);
-                    memoryStream.Seek(0, 0);
-                    using (var image = Image.Load(memoryStream))
-                    {
-                        image.Mutate(x => x.Crop(contentArea).Resize(32, 32));
-                        using (var modifiedImageMemoryStream = new MemoryStream())
-                        {
-                            image.SaveAsBmp(modifiedImageMemoryStream);
-                            var index = 1;
-                            for (var y = 0; y < 32; y++)
-                            {
-                                var row = image.GetPixelRowSpan(y);
-                                for (var x = 0; x < 32; x++)
-                                {
-                                    var pixel = row[x];
-                                    
-                                    result[index++] = ((pixel.R + pixel.G + pixel.B) / 3).ToString();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
+        
     }
 }

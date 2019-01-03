@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetLearner", "NeuralNetLearner\NeuralNetLearner.csproj", "{012DF781-D486-4BC3-9E96-BCAD1B645BB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmapCommon", "SmapCommon\SmapCommon.csproj", "{0C8B868C-C3C7-43C1-B2FB-4C3F5738FE1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{012DF781-D486-4BC3-9E96-BCAD1B645BB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{012DF781-D486-4BC3-9E96-BCAD1B645BB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{012DF781-D486-4BC3-9E96-BCAD1B645BB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8B868C-C3C7-43C1-B2FB-4C3F5738FE1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8B868C-C3C7-43C1-B2FB-4C3F5738FE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8B868C-C3C7-43C1-B2FB-4C3F5738FE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8B868C-C3C7-43C1-B2FB-4C3F5738FE1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

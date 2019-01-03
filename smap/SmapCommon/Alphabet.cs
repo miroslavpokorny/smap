@@ -1,6 +1,6 @@
 using Cambia.BaseN;
 
-namespace smap
+namespace SmapCommon
 {
     public static class Alphabet
     {

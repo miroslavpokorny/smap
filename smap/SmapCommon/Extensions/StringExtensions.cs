@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace smap
+namespace SmapCommon.Extensions
 {
     public static class StringExtensions
     {

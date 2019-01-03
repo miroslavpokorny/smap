@@ -50,7 +50,7 @@ namespace smap
             {
                 MetaData = readMetaData,
                 QrCodeBottomPositionY = maxY + (maxY - minY) / 2,
-                PageRotation = (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 ? 0 : upperLeftPoint.X < lowerLeftPoint.X ? 1 : -1) * Math.Tan(Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * (180/Math.PI)
+                PageRotation = (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 ? 0 : upperLeftPoint.X < lowerLeftPoint.X ? -1 : 1) * Math.Tan(Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * (180/Math.PI)
             };
         } 
     }

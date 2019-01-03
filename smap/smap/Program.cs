@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,9 +6,10 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Neural.Models;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SmapCommon;
+using SmapCommon.Extensions;
 
 namespace smap
 {
@@ -38,12 +36,11 @@ namespace smap
                 image.Mutate(x =>
                     x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY,
                             x.GetCurrentSize().Width - 1, x.GetCurrentSize().Height - qrData.QrCodeBottomPositionY - 1))
-                        .Rotate((float) qrData.PageRotation).BackgroundColor(Rgba32.White));
+                        .Rotate((float) - qrData.PageRotation).BackgroundColor(Rgba32.White));
                 var contentArea = image.GetContentArea();
                 image.Mutate(x => x.Crop(contentArea));
 
                 // TODO replace constants with data from metaData
-                // var letterWidth = image.Width / (double)DataOutput.MaxLettersPerRow;
                 var letterHeight = image.Height / (double)DataOutput.MaxRowsPerPage;
 
                 var letters = new List<CsvRow>(DataOutput.MaxLettersPerPage);
@@ -74,7 +71,7 @@ namespace smap
                         {
                             letterImage.SaveAsBmp(memoryStream);
                             memoryStream.Seek(0, 0);
-                            letters.Add(new CsvRow(columnNameToIndex, FileAsData(memoryStream)));                            
+                            letters.Add(new CsvRow(columnNameToIndex, LoadImageHelper.FileAsData(memoryStream)));                            
                         }
                         using (var fileStream = new FileStream($"../assets/temp/{y:D4}_{x:D4}.jpg", FileMode.Create))
                         {
@@ -118,64 +115,6 @@ namespace smap
             }
         }
         
-        private static string[] FileAsData(string fileName)
-        {
-            using (var fileStream = new FileStream(fileName, FileMode.Open))
-            {
-                return FileAsData(fileStream,
-                    Alphabet.Base32Alphabet.ToString().IndexOf(Path.GetFileName(fileName)[0]));
-            }
-        }
-
-        private static string[] FileAsData(Stream stream, int expectedResult = -1)
-        {
-            var result = new string[1025];
-            result[0] = expectedResult.ToString();
-            using (var bitmap = System.Drawing.Image.FromStream(stream) as Bitmap)
-            {
-                if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
-                bitmap.Threshold(128);
-                var contentArea = bitmap.GetContentArea();
-                using (var memoryStream = new MemoryStream())
-                {
-                    bitmap.Save(memoryStream, ImageFormat.Bmp);
-                    memoryStream.Seek(0, 0);
-                    using (var image = SixLabors.ImageSharp.Image.Load(memoryStream))
-                    {
-                        image.Mutate(x => x.Crop(contentArea).Resize(32, 32));
-                        using (var modifiedImageMemoryStream = new MemoryStream())
-                        {
-                            SixLabors.ImageSharp.ImageExtensions.SaveAsBmp(image, modifiedImageMemoryStream);
-                            var index = 1;
-                            for (var y = 0; y < 32; y++)
-                            {
-                                var row = image.GetPixelRowSpan(y);
-                                for (var x = 0; x < 32; x++)
-                                {
-                                    var pixel = row[x];
-                                    
-                                    result[index++] = ((pixel.R + pixel.G + pixel.B) / 3).ToString();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private static string GenerateRandomString(int strLen)
-        {
-            var alphabet = Alphabet.Base32Alphabet.ToString();
-            var stringBuilder = new StringBuilder(strLen);
-            var random = new Random();
-            for (var i = 0; i < strLen; i++)
-            {
-                stringBuilder.Append(alphabet[random.Next(0, alphabet.Length)]);
-            }
-
-            return stringBuilder.ToString();
-        }
+        
     }
 }
