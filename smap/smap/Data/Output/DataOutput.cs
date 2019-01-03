@@ -27,12 +27,12 @@ namespace smap.Data.Output
             _sha1CryptoServiceProvider = SHA1.Create();
         }
 
-        private string GetDataAsBase32String()
+        public string GetDataAsBase32String()
         {
             return Encoder.Encode(_data);
         }
 
-        private byte[] ComputeSha1Checksum(string data)
+        public byte[] ComputeSha1Checksum(string data)
         {
             return _sha1CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(data));
         }

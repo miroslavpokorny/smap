@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,11 +21,11 @@ namespace smap
         static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-//            var dataOutput = new DataOutput(File.ReadAllBytes("./assets/Database.kdbx"));
+            var dataOutput = new DataOutput(File.ReadAllBytes("./assets/Database.kdbx"));
 //            dataOutput.SaveDataAsPdf("Database.pdf");
 
             var qrReader = new QrReader();
-            var qrData = qrReader.ReadQrCode("assets/Database-page-001.jpg");
+            var qrData = qrReader.ReadQrCode("assets/Database-page-002.jpg");
             // var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
             var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
@@ -33,7 +34,7 @@ namespace smap
                 columnNameToIndex[$"pixel{i}"] = i;
             }
             
-            using (var image = SixLabors.ImageSharp.Image.Load("assets/Database01.jpg"))
+            using (var image = Image.Load("assets/Database02.jpg"))
             {
                 image.Mutate(x =>
                     x.Crop(new SixLabors.Primitives.Rectangle(0, qrData.QrCodeBottomPositionY,
@@ -43,10 +44,12 @@ namespace smap
                 image.Mutate(x => x.Crop(contentArea));
 
                 // TODO replace constants with data from metaData
-                var letterHeight = image.Height / (double)DataOutput.MaxRowsPerPage;
 
-                var letters = new List<CsvRow>(DataOutput.MaxLettersPerPage);
-                for (var y = 0; y < DataOutput.MaxRowsPerPage; y++)
+                var rowsPerPage = (int) Math.Ceiling(qrData.MetaData.DataChunkSize / (double) DataOutput.MaxLettersPerRow);
+                var letterHeight = image.Height / (double) rowsPerPage;
+
+                var letters = new List<CsvRow>((int) qrData.MetaData.DataChunkSize);
+                for (var y = 0; y < rowsPerPage; y++)
                 {
                     var posY = y * letterHeight;
                     var rowImage = image.Clone(img =>
@@ -59,10 +62,11 @@ namespace smap
                     rowImage.Mutate(x => x.Crop(rowArea).BackgroundColor(Rgba32.White));
 
 
+                    var currentRowLetters = y == rowsPerPage - 1
+                        ? qrData.MetaData.DataChunkSize - DataOutput.MaxLettersPerRow * y : DataOutput.MaxLettersPerRow;
                     var nextX = 0;
-                    for (var x = 0; x < DataOutput.MaxLettersPerRow; x++)
+                    for (var x = 0; x < currentRowLetters; x++)
                     {
-
                         var nextLetterContentArea = rowImage.GetNextLetterContentArea(nextX);
                         nextX = nextLetterContentArea.X + nextLetterContentArea.Width;
                         
@@ -81,10 +85,10 @@ namespace smap
                         }
                     }
                 }
-//                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
-//                {
-//                    image.SaveAsJpeg(fileStream);                    
-//                }
+                using (var fileStream = new FileStream("onlyData.jpg", FileMode.Create))
+                {
+                    image.SaveAsJpeg(fileStream);                    
+                }
 
                 var csvReader = new CsvParser(() =>
                 {
@@ -114,6 +118,8 @@ namespace smap
                 }
                 
                 File.WriteAllText("decoded.txt", stringBuilder.ToString());
+                
+                Console.WriteLine(qrData.MetaData.Checksum.ToList().SequenceEqual(dataOutput.ComputeSha1Checksum(stringBuilder.ToString()).ToList()));
             }
         }
         
