@@ -33,11 +33,6 @@ namespace smap.Data.Output
             return Encoder.Encode(_data);
         }
 
-        public byte[] ComputeSha1Checksum(string data)
-        {
-            return _sha1CryptoServiceProvider.ComputeHash(Encoding.UTF8.GetBytes(data));
-        }
-
         private MemoryStream GetQrCodeAsBmpImage(MetaData metaData)
         {
             var barcodeWriter = new BarcodeWriterPixelData()
@@ -90,7 +85,7 @@ namespace smap.Data.Output
                     TotalDataSize = (uint) base32.Length,
                     DataChunkSize = (uint) page.Length,
                     ChunkId = (uint) pageIndex,
-                    Checksum = ComputeSha1Checksum(page)
+                    Checksum = Sha1Helper.ComputeSha1Checksum(page)
                 });
                 var pdfPage = pdfDocument.AddPage();
                 var gfx = XGraphics.FromPdfPage(pdfPage);

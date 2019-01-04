@@ -34,3 +34,5 @@ Desktop.ini
 
 **/NeuralNetLearner/assets/**
 /smap/assets/temp/**
+/smap/smap/output/**
+/smap/NeuralNetLearner/data.csv
