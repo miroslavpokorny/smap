@@ -26,7 +26,6 @@ namespace smap
 
             var qrReader = new QrReader();
             var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
-            // var qrData = qrReader.ReadQrCode("assets/Database01.jpg");
 
             var columnNameToIndex = new Dictionary<string, int> {["class"] = 0};
             for (var i = 1; i <= 1024; i++)
@@ -48,12 +47,10 @@ namespace smap
                     image.SaveAsJpeg(fileStream);                    
                 }
 
-                // TODO replace constants with data from metaData
-
                 var rowsPerPage = (int) Math.Ceiling(qrData.MetaData.DataChunkSize / (double) DataOutput.MaxLettersPerRow);
-                // var letterHeight = image.Height / (double) rowsPerPage;
 
                 var letters = new List<CsvRow>((int) qrData.MetaData.DataChunkSize);
+                var lettersFallback = new List<CsvRow>((int) qrData.MetaData.DataChunkSize);
                 var nextY = 0;
                 for (var y = 0; y < rowsPerPage; y++)
                 {
@@ -83,6 +80,7 @@ namespace smap
                             letterImage.SaveAsBmp(memoryStream);
                             memoryStream.Seek(0, 0);
                             letters.Add(new CsvRow(columnNameToIndex, LoadImageHelper.FileAsData(memoryStream)));                            
+                            lettersFallback.Add(new CsvRow(columnNameToIndex, LoadImageHelper.FileAsData(memoryStream, threshold: 90)));                            
                         }
                         using (var fileStream = new FileStream($"../assets/temp/{y:D4}_{x:D4}.jpg", FileMode.Create))
                         {
@@ -91,36 +89,44 @@ namespace smap
                     }
                 }
 
-                var csvReader = new CsvParser(() =>
+
+                var iterationCounter = 0; 
+                foreach (var lettersCollection in new[] { letters, lettersFallback })
                 {
-                    var memoryStream = new MemoryStream();
-                    var csvWriter = new CsvWriter(() => new StreamWriter(memoryStream, Encoding.Default, 4096, true));
-                    csvWriter.Write(letters);
-                    memoryStream.Seek(0, 0);
-                    return new StreamReader(memoryStream);
-                });
-                
-                var targetName = "class";
+                    var csvReader = DataOutput.GetCsvParser(lettersCollection);
+                    
+                    var targetName = "class";
         
-                var featureNames = csvReader.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
+                    var featureNames = csvReader.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
         
-                var testObservations = csvReader.EnumerateRows(featureNames).ToF64Matrix();
-                // var testTargets = csvReader.EnumerateRows(targetName).ToF64Vector();
+                    var testObservations = csvReader.EnumerateRows(featureNames).ToF64Matrix();
                 
-                testObservations.Map(p => p / 255);
-                var model = ClassificationNeuralNetModel.Load(() => new StreamReader("../NeuralNetLearner/network.xml"));
-                var predictions = model.Predict(testObservations);
+                    testObservations.Map(p => p / 255);
+                    var model = ClassificationNeuralNetModel.Load(() => new StreamReader("../NeuralNetLearner/network.xml"));
+                    var predictions = model.Predict(testObservations);
                 
-                var stringBuilder = new StringBuilder();
+                    var stringBuilder = new StringBuilder();
                 
-                foreach (var prediction in predictions)
-                {
-                    stringBuilder.Append(Alphabet.Base32Alphabet.ToString()[(int) prediction]);
+                    foreach (var prediction in predictions)
+                    {
+                        stringBuilder.Append(Alphabet.Base32Alphabet.ToString()[(int) prediction]);
+                    }
+                
+                    File.WriteAllText($"decoded{iterationCounter}.txt", stringBuilder.ToString());
+
+                    var isChecksumCorrect = qrData.MetaData.Checksum.ToList()
+                        .SequenceEqual(dataOutput.ComputeSha1Checksum(stringBuilder.ToString()).ToList());
+
+                    Console.WriteLine($"{iterationCounter} => {isChecksumCorrect}");
+
+                    if (isChecksumCorrect)
+                    {
+                        File.WriteAllText("decoded.txt", stringBuilder.ToString());
+                        break;
+                    }
+
+                    iterationCounter++;
                 }
-                
-                File.WriteAllText("decoded.txt", stringBuilder.ToString());
-                
-                Console.WriteLine(qrData.MetaData.Checksum.ToList().SequenceEqual(dataOutput.ComputeSha1Checksum(stringBuilder.ToString()).ToList()));
             }
         }
         

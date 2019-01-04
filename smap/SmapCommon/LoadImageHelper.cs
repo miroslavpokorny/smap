@@ -20,14 +20,14 @@ namespace SmapCommon
             }
         }
         
-        public static string[] FileAsData(Stream stream, int expectedResult = -1)
+        public static string[] FileAsData(Stream stream, int expectedResult = -1, byte threshold = 128)
         {
             var result = new string[1025];
             result[0] = expectedResult.ToString();
             using (var bitmap = System.Drawing.Image.FromStream(stream) as Bitmap)
             {
                 if (bitmap == null) throw new NullReferenceException("bitmap should not be null");
-                bitmap.Threshold(128);
+                bitmap.Threshold(threshold);
                 var contentArea = bitmap.GetContentArea();
                 using (var memoryStream = new MemoryStream())
                 {

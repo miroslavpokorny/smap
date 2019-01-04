@@ -5,6 +5,7 @@ using System.Text;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using smap.Helpers;
+using SharpLearning.InputOutput.Csv;
 using SmapCommon.Extensions;
 using ZXing;
 using ZXing.QrCode;
@@ -100,6 +101,19 @@ namespace smap.Data.Output
             }
             
             pdfDocument.Save(outputFileName);
+        }
+
+        public static CsvParser GetCsvParser(IEnumerable<CsvRow> rows)
+        {
+            var csvReader = new CsvParser(() =>
+            {
+                var memoryStream = new MemoryStream();
+                var csvWriter = new CsvWriter(() => new StreamWriter(memoryStream, Encoding.Default, 4096, true));
+                csvWriter.Write(rows);
+                memoryStream.Seek(0, 0);
+                return new StreamReader(memoryStream);
+            });
+            return csvReader;
         }
     }
 }
