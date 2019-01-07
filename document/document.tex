@@ -522,6 +522,20 @@ Minimálně je třeba nalézt 3 články z impaktovaných časopisů ISI WOK JCR
 
 \section{Problem definition / Definice problémů}
 
+Pokud budeme chtít zálohovat počítačová data na papír, tak se nám otevírá daleko více možností, než by se na první pohled mohlo zdát. V minulosti počítače běžně používaly papír jako paměťové médium. Na tzv. děrné štítky se ukládaly jak data, tak programy, které počítače zpracovávaly. Děrný štítek jako takový neměl nikdy příliš velkou kapacitu. Děrný štítek 5081 (5081 punch card) mohl nést informaci až o 80 alfanumerických znaků. Ačkoliv děrné štítky byly spolehlivé, v dnešní době se jedná o zastaralou technologii a pro jejich vytvoření/čtení je zapotřebí specializovaný hardware, který v dnešní době již není běžný. 
+
+Další možnosti jak zálohovat data na papír je využití nějakého prostředku pro automatizovaný sběr dat. Příkladem těchto prostředků mohou být kódy typu data matrix, QR kód, nebo EAN čárový kód. Tyto kódy jsou standardizované a existuje velké množství softwarových řešení, které umí tyto kódy generovat a číst. Nevýhodou těchto kódů pak je, že jsou pro člověka velice těžce čitelné, a jejich rozluštění v případě potřeby by pro člověka mohlo být velice náročné (ne-li nemožné).
+
+Jedno možné řešení implementoval Grant Trebbin. Jeho řešení neimplementuje žádný samostatný program, ale pouze využívá nástrojů/utilitek dostupných na linuxových operačních systémech. Jeho řešení spočívá v tom, že data nejprve zakóduje do kódování base64. Poté data rozseká na menší části, tak aby se vešli do QR kódu. Poté pro každý úsek dat vygeneruje jeden QR kód. Následně jsou vytvořeny jednotlivé stránky, které obsahují více QR kódu, tyto stránky pak mohou být vytištěny. Po načtení kódu zpět do počítače, jsou kódy postupně dekódovány a z jednotlivých částí je slepen původní base64 soubor. Jakmile existuje soubor s base64 textem, může se opět dekódovat do původní binární podoby. Toto řešení má výhodu ve využití běžně dostupných nástrojů v operačním systému. Nevýhodu je absence automatice řešení, tj. pro kódování a dekódování dat je nutné, aby uživatel spouštěl příkazy ručně.
+
+% https://www.grant-trebbin.com/2015/05/encode-and-decode-file-backed-up-as.html  
+
+Alternativní možností jak zálohovat data na papír (v tomto případě se nemusí jednat jen o papír, ale jakékoliv vizuální médium) je tzv. dataglyph. V tomto případě jsou binární data zakódována do vizuální podoby pomocí sekvencí šikmých čar (lomítek a zpětných lomítek), které reprezentují jedničky a nuly dat. Jedná se o jeden z typů ,,čárových kódů``, které jsou snadno zpracovatelné počítačem. Tento typ kódu lze kombinovat (zakódovat) dohromady s obrázkem, tak aby byl pro člověka na první pohled skrytý, ale pro počítač stále dobře čitelný. Toto řešení není příliš vhodné pro uložení velkého množství informací.
+
+% http://www.freepatentsonline.com/6641053.html
+
+
+
 \textbf{OBSAH}
 
 V této kapitole je třeba definovat problém a ukázat alespoň tři řešení (lépe 5) od někoho jiného (formou odstavce shrnujícího přístup dotyčného (3 až 5 řádků)). Kapitola by měla končit konstatováním, že žádný z přístupů neřeší definovaný problém tak, jak by bylo třeba (jak bychom potřebovali my) a proto je třeba najít nový způsob (ten náš), o kterém se bude pojednávat v další kapitole.
