@@ -530,9 +530,25 @@ Jedno možné řešení implementoval Grant Trebbin. Jeho řešení neimplementu
 
 % https://www.grant-trebbin.com/2015/05/encode-and-decode-file-backed-up-as.html  
 
-Alternativní možností jak zálohovat data na papír (v tomto případě se nemusí jednat jen o papír, ale jakékoliv vizuální médium) je tzv. dataglyph. V tomto případě jsou binární data zakódována do vizuální podoby pomocí sekvencí šikmých čar (lomítek a zpětných lomítek), které reprezentují jedničky a nuly dat. Jedná se o jeden z typů ,,čárových kódů``, které jsou snadno zpracovatelné počítačem. Tento typ kódu lze kombinovat (zakódovat) dohromady s obrázkem, tak aby byl pro člověka na první pohled skrytý, ale pro počítač stále dobře čitelný. Toto řešení není příliš vhodné pro uložení velkého množství informací.
+Alternativní možností jak zálohovat data na papír (v tomto případě se nemusí jednat jen o papír, ale jakékoliv vizuální médium) je tzv. dataglyph. V tomto případě jsou binární data zakódována do vizuální podoby pomocí sekvencí šikmých čar (lomítek a zpětných lomítek), které reprezentují jedničky a nuly dat. Jedná se o jeden z typů ,,čárových kódů``, které jsou snadno zpracovatelné počítačem. Tento typ kódu lze kombinovat (zakódovat) dohromady s obrázkem, tak aby byl pro člověka na první pohled skrytý, ale pro počítač stále dobře čitelný. Toto řešení není příliš vhodné pro uložení velkého množství informací. Další nevýhodou tohoto řešení je to, že nemá otevřený zdrojový kód (open source) a v případě, že by jsme jej chtěly využít budeme potřebovat patřičnou licenci.
 
 % http://www.freepatentsonline.com/6641053.html
+% http://www.microglyphs.com/english/html/dataglyphs.shtml
+
+Dalším jednoduchým prográmkem, který zálohuje data na papír je \emph{paperbackup.py}. Jak již název napovídá jedná se o řešení implementované v programovacím jazyce python. Paperbackup je primárně určen pro zálohy šifrovacích klíčů (GnuPG (v ASCII podobě), SSH) nebo šifrovaného textu. Výstupem programu je pdf soubor, který může být vytištěn na papír. Obsahem tohoto souboru jsou stránky obsahující QR kódy, u každého kódu je textová informace o jakou část dat se jedná. Na konci souboru je pak, pro případ selhání dekódování QR kódů, vytištěn plaintextový obsah zálohovaného souboru. 
+
+% https://github.com/intra2net/paperbackup
+
+Nejvíce propracovaným existujícím řešením, pro zálohu dat na papír se zdá být aplikace PaperBack. PaperBack je open source řešní, šířené pod licencí GNU General Public License, version 3. Tato aplikace ukládá data na papír ve formě bitmapových obrázků (jsou velice podobné QR kódům, nebo spíše data matrix kódům, protože neobsahují ,,finder pattern`` čtverce, tak jako QR kódy), které mají formát specificky vyvinutý pro účely této aplikace. Toto řešení umí v případě kvalitní tiskárny uložit až 500000 bajtů nekomprimovaných dat na jednu stranu A4. Řešení PaperBack má integrované komprimační algoritmy, pomocí kterých je v ideálním případě možné uložit na jednu stranu A4 až 3 MB dat. Další vlastností této aplikace je integrovaný mechanismus šifrování dat. Data předaná aplikaci, aby je zálohovala, mohou být před vytištěním zašifrována, pomocí algoritmu AES-192, tak aby v případě, krádeže papíru byla data ochráněna, tj. útočník sice získá papíry s daty, ale bez správného hesla, je nebude schopen obnovit.
+
+% http://www.aishack.in/tutorials/scanning-qr-codes-1/
+% http://ollydbg.de/Paperbak/
+
+Všechny uvedené existující aplikace/metody využívají společný princip, kdy data, které zálohujeme jsou uloženy na papír ve formě grafické reprezentace (tj. jedná se o nějakou bitmapu, ve které jsou data zakódována). Výhodou uložení dat do bitmapy (například QR kódu) je to, že jsme schopni uložit relativně velké množství informací na malou plochu papíru. Rekonstrukce těchto dat pak záleží na dvou faktorech. Prvním je kvalita tiskárny, pomocí které budou data na papír tištěna, tak aby se nějaká informace neztratila už během tisku. Druhý důležitý faktor je načítání dat zpět do počítače. Pro účely načtení dat je nutné mít nějaké kvalitní skenovací zařízení, tak aby se žádná informace neztratila při načítání dat do počítače. 
+
+Nevýhodou těchto řešení je to, že pro obnovu dat je zapotřebí mít k dispozici původní program. V případě, že při dekódování program selže, nebude možné (nebo to bude nesmírně složité) data obnovit. Může také nastat situace, kdy dekódovací program nebude po nějaké době spustitelný na moderním stroji (například program mohl být napsán pro v době dekódování již nepodporovaný operační systém, atd...). Tento problém nemusí být tak významný v případě open source řešení (je možné provést port na modernější operační systém/platformu). V případě proprietárních řešení mohou data být ztracena.
+
+Žádný z existujících řešení nevyužil možnosti data, zálohovat zakódovaná v textové podobě, tak aby v případě potřeby (selhání dekódovacího programu) bylo možné, aby je dekódoval sám člověk. Z tohoto důvodu budeme v této práci dále pojednávat o řešení, které data uloží na papír v textové podobě, tak aby je byl člověk v případě potřeby schopen převést do počítače sám ručně (program sám o sobě by měl být dostatečně stabilní, tak, aby k tomuto případu docházelo jen zřídka, ne-li vůbec). 
 
 
 
