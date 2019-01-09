@@ -20,12 +20,10 @@ namespace smap.Data.Output
         public const int MaxLettersPerPage = MaxLettersPerRow * MaxRowsPerPage;
         
         private readonly byte[] _data;
-        private readonly SHA1 _sha1CryptoServiceProvider;
 
         public DataOutput(byte[] data)
         {
             _data = data;
-            _sha1CryptoServiceProvider = SHA1.Create();
         }
 
         public string GetDataAsBase32String()
