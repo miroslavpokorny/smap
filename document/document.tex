@@ -524,6 +524,8 @@ Minimálně je třeba nalézt 3 články z impaktovaných časopisů ISI WOK JCR
 
 Pokud budeme chtít zálohovat počítačová data na papír, tak se nám otevírá daleko více možností, než by se na první pohled mohlo zdát. V minulosti počítače běžně používaly papír jako paměťové médium. Na tzv. děrné štítky se ukládaly jak data, tak programy, které počítače zpracovávaly. Děrný štítek jako takový neměl nikdy příliš velkou kapacitu. Děrný štítek 5081 (5081 punch card) mohl nést informaci až o 80 alfanumerických znaků. Ačkoliv děrné štítky byly spolehlivé, v dnešní době se jedná o zastaralou technologii a pro jejich vytvoření/čtení je zapotřebí specializovaný hardware, který v dnešní době již není běžný. 
 
+% https://blog.codinghorror.com/the-paper-data-storage-option/
+
 Další možnosti jak zálohovat data na papír je využití nějakého prostředku pro automatizovaný sběr dat. Příkladem těchto prostředků mohou být kódy typu data matrix, QR kód, nebo EAN čárový kód. Tyto kódy jsou standardizované a existuje velké množství softwarových řešení, které umí tyto kódy generovat a číst. Nevýhodou těchto kódů pak je, že jsou pro člověka velice těžce čitelné, a jejich rozluštění v případě potřeby by pro člověka mohlo být velice náročné (ne-li nemožné).
 
 Jedno možné řešení implementoval Grant Trebbin. Jeho řešení neimplementuje žádný samostatný program, ale pouze využívá nástrojů/utilitek dostupných na linuxových operačních systémech. Jeho řešení spočívá v tom, že data nejprve zakóduje do kódování base64. Poté data rozseká na menší části, tak aby se vešli do QR kódu. Poté pro každý úsek dat vygeneruje jeden QR kód. Následně jsou vytvořeny jednotlivé stránky, které obsahují více QR kódu, tyto stránky pak mohou být vytištěny. Po načtení kódu zpět do počítače, jsou kódy postupně dekódovány a z jednotlivých částí je slepen původní base64 soubor. Jakmile existuje soubor s base64 textem, může se opět dekódovat do původní binární podoby. Toto řešení má výhodu ve využití běžně dostupných nástrojů v operačním systému. Nevýhodu je absence automatice řešení, tj. pro kódování a dekódování dat je nutné, aby uživatel spouštěl příkazy ručně.
@@ -566,6 +568,34 @@ V této kapitole budou alespoň 3, lépe však 5 odkazů na literaturu, vztahuj�
 
 
 \section{New solution / Nové řešení}
+
+V rámci této práce tedy bude nevrženo nové alternativní řešení, které by mělo řešit neduhy řešení existujících. Nové řešení by by melo implementovat 2 nutné funkce. 1. funkcí je zakódování libovolných dat (neřešíme zda se jedná o data binární nebo textová, ale chováme se k ním vždy naprosto stejně, tj. pro program se bude vždy jednat o sekvenci/blok/pole bajtů) na papír. 2. neméně důležitá funkce je, že řešení musí být schopné výstup z kroku kódování také dekódovat a rekonstruovat vstupní data do stejné podoby v jaké byly na vstupu fáze kódování. 
+
+Při rekonstrukci dat (tj. načítání dat z papíru do počítače a jejich dekódování) musí být také počítač schopen rozhodnout zda se data načetla korektně, z tohoto důvodu je velice žádoucí zavést mechanismus kontrolního součtu, pomocí kterého jsme velice rychle schopni rozhodnout, zda se data nečetla korektně, nebo nikoliv a je potřeba zkusit data dekódovat znovu (například s upravenými parametry dekódování), nebo informovat uživatele o chybě.
+
+Rozhodl jsem se pro variantu kódování data do textové podoby, tak aby v případě selhání programu při dekódování byla šance, že uživatel bude schopen data alespoň ručně přepsat do počítače a následně rekonstruovat. Velice důležité tedy je na samém počátku návrhu řešení se zamyslet na tím jak budeme chtít data dekódovat. Klasické OCR algoritmy nemusí být příliš přesné na sekvenci náhodných znaků. Z tohoto důvodu jsem se rozhodl experimentálně vyzkoušet řešení, které bude využívat konvoluční neuronové sítě, kterou využije ke klasifikaci jednotlivých písmen načteného textu.
+
+% http://apps.webofknowledge.com/full_record.do?product=WOS&search_mode=GeneralSearch&qid=7&SID=D5UEQa9vmc34T3srqeS&page=1&doc=10
+
+Když víme jak budeme chtít data dekódovat můžeme se vrátit k fázi kódování dat. Pro prvotní prototyp řešení jsem se rozhodl využít některého z konvenčních kódování binárních data do textové podoby. Pro kódování dat bude tedy využito BaseN kódování (Base64, Base32, Base16,...). Čím vyšší N u kódování zvolíme, tím větší bude hustota dat, které pomocí jednoho znaku zakódujeme, na druhé straně nám roste počet znaků, které se mohou ve výstupu objevit a tím pádem také roste pravděpodobnost, záměny (nesprávné klasifikace) některých podobných znaků (například znaky číslice nula 0, malé a velké O latinky, jsou velice podobné). Z tohoto důvodu je vhodné využít upravenou znakovou sadu, tak aby se předešlo nesprávné klasifikaci. Z tohoto důvodu vypadá kódování Base32 velice slušně, protože je složeno pouze z velkých písmen latinky a omezeného počtu číslic (2-7), tak aby se vynechaly podobné znaky.
+
+% https://tools.ietf.org/html/rfc4648
+
+Důležitý faktor je také, jaký zvolíme font, pro kódování jednotlivých znaků, některé fonty mají snadno rozeznatelné znaky, u některých se jejich přečtení o poznání těžší. Některé fonty mají také každý znak jinak veliký (resp. široký). Aby bylo dekódování jednodušší rozhodl jsem se, že data budou na papír zapsána neproporcionálním fontem \cite{Book:TheTypographicDeskReference} (monospaced font), který má všechny znaky stejně široké, čímž můžeme snadno zajistit, že na každém řádku bude vždy (maximálně) stejný počet znaků (tj. s výjimkou posledního řádku na stránce). Existuje velké množství monospaced fontů. Rozhodl jsem se využít neproporcionální font Consolas.
+
+Když máme zvolen vhodný font je nutné zvolit, ještě vhodnou velikost písmen, tak aby byly snadno čitelné, a to jak pro počítač po načtení skenerem, tak pro člověka, v případě, že bude potřebovat data dekódovat ručně. Pro prvotní prototyp jsem zvolil, velikost fontu 12. Pro snazší detekci jednotlivcích písmen je mezi každé dva znaky přidána navíc drobná mezera. Výsledkem pak tedy máme ,,matici`` písmen. Při této velikosti se na řádek vejde 58 znaků a na stránku se vejde 48 řádků, celkem se tedy vejde na stánku 2784 znaků. Jelikož Base32 zakóduje 5 bajtů do 8 znaků vejde se na stránku maximálně 1740 bajtů původních dat.
+
+Jak již bylo zmíněno výše je zapotřebí také mít možnost rychlé detekce chyby v případě, že při dekódování dojde k nesprávné klasifikaci nějakého písmene. Z tohoto důvodu je zapotřebí přidat na každou stránku informaci o kontrolním součtu (tj. z písmen na stránce bude vypočítán hash, který v případě, že při dekódování nastane nějaká chyba bude odlišný od hashe, který se spočte z dekódovaných písmen, pokud hashe budou stejné budeme vědět, že data byla dekódována správně). Pro výpočty kontrolních součtů jsem se rozhodl využít hashovací algoritmus SHA1, který produkuje hashe o velikosti 20 bajtů.
+
+% https://tools.ietf.org/html/rfc3174
+
+V případě, že se nám promíchají jednotlivé papíry (v případě, že data budou zakódována na více papírů), je také nutné na papír uložit informaci o tom, jakou část dat papír obsahuje. K tomuto účelu postačí jednoduchý číselný identifikátor, který bude říkat, o jakou stránku se jedná. Dále pro zjednodušení práce dekódování může být na papír uložena další informace o tom, kolik znaků je na stránce celkem uloženo a v poslední řadě také informaci o tom z kolika zakódovaných znaků se skládají původní data. Celkově tedy na papír kromě kontrolního součtu uložíme ještě další 3 celá čísla (ani u jednoho nedává smysl znaménko, takže se bude jednat o celá čísla bez znaménka), které zaberou celkem dalších 12 bajtů. 
+
+Máme tedy, s kontrolním součtem, 32 bajtů ,,metadat``, které musíme nějakým snadno rekonstruovatelným způsobem uložit na stránku. Pro účely uložení těchto metadat se ukazuje, že QR kód by mohl být elegantním řešením jak tato data uložit. Metadata budou zakódována nejprve na jednotlivé bajty v následujícím pořadí. První čtyři bajty reprezentují celočíselné kladné číslo (unsigned integer) jehož význam je celkový počet písmen zakódovaných dat (pozn. unsigned integer je uložen ve formátu little-endian). Další 4 bajty reprezentují (unsigned integer) jehož význam je celkový počet písmen na stránce. Následující 4 bajty reprezentují (unsigned integer) jehož význam je pořadí dat (tj. o jakou se jedná stránku). Na konec je uloženo 20 bajtů reprezentující kontrolní součet spočtený algoritmem SHA1. 
+
+% https://www.ietf.org/rfc/ien/ien137.txt little endian
+
+Jak již bylo zmíněno dříve snažíme se, aby data v případě nouze byly relativně snadno rekonstruovatelná člověkem, proto tato binární data zakódujeme ještě do Base64, tak aby šli snadno přečíst pomocí čteček QR kódu (například na mobilním telefonu). QR kód s Base64 textem je poté vložen na stánku vlevo nahoře. Umístění QR kódu nám dává také možnost jistých kalibrací a dopočtení dalších informací. Například na základě umístění finder patterns v QR kódu jsme schopni detekovat to, zda není stránka lehce natočená (např. v důsledku skenování) a provést patřičné korekce.
 
 \textbf{OBSAH}
 
@@ -647,6 +677,9 @@ The authors would like to thank...
 \bibitem{IEEEhowto:kopka}
 H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+  
+\bibitem{Book:TheTypographicDeskReference}
+ROSENDORF,~Theodore. The typographic desk reference: TDR. New Castle, DE: Oak Knoll Books, 2009. ISBN 978-1-58456-231-3.
 
 \end{thebibliography}
 
