@@ -607,6 +607,30 @@ Rozsahem je minimálně 1 strana a max. 2 strany.
 
 \section{Implementation / Implementace řešení}
 
+Pro implementaci řešení popsaného v předchozí kapitole jsem zvolil programovací jazyk C\# a platformu .NET Core, která umožňuje výslednou aplikaci spustit na všech v dnešní době běžných operačních systémech (Windows, Linux, OS X).
+
+Jelikož dne návrhu nového řešení budou písmena dekódována pomocí neuronové sítě, bylo zapotřebí najít nějakou vhodnou knihovnu, kterou by šlo použít. V rámci tohoto projektu jsem zvolil knihovnu SharpLearning, kvůli relativně jednoduchému API a open source licenci MIT, která například umožňuje využít knihovnu i v komerčních aplikacích, aniž by nutila uvolňovat zdrojové kódy těchto aplikací a nenutí aplikaci dále šířit pod touto licencí.
+
+Jednou z nejdůležitějších věcí, aby vše fungovalo, je správné naučení neuronové sítě. Z tohoto důvodu u projektu vznikl další ,,pod projekt`` NeuralNetLearner, jehož účelem je vygenerování dat, která jsou poté použita pro naučení neuronové sítě. Program funguje tak, že postupně vytvoří obrázky se všemi písmeny Base32 abecedy ve fontu Consolas (pokaždé jedno písmeno jeden obrázek). Postupně je vytvořeno několik obrázků s písmeny v různých velikostech. 
+
+Než je písmeno předáno na vstup neuronové sítě je s ním provedeno vždy několik kroků. Nejprve je detekována oblast (čtverec), ve kterém se písmeno přesně nachází, obrázek je pak touto oblastí oříznut. Po oříznutí se změní velikost obrázku na standardní velikost 32x32 pixelů, na kterou je neuronová síť připravena. Jako poslední věc, než je obrázek předán neuronové síti je prahování (tj. všechny pixely, které mají hodnotu menší než 128 budou zcela černé a všechny ostatní zcela bílé. Výsledkem je tedy obrázek, který je složen pouze z pixelů zcela černých a nebo zcela bílých). Jakmile je obrázek předzpracován, tak může být předán na vstup neuronové sítě. 
+
+Výsledkem této pomocné aplikace je soubor network.xml, s naučenou neuronovou sítí, který je poté použit (načten) v samotné aplikaci. Část funkcionality této aplikace je vytažena do dalšího samostatného projektu (knihovny) SmapCommon, tak aby aplikace, která bude písmena později dekódovat mohla využít stejného postupu, který byl využit pro zpracování obrázků, před předáním síti k učení (tj. funkce použité pro úpravy obrázků, budou používat stejně obě dvě aplikace, použitím knihovny se zajistí konzistence mezi oběma projekty).
+
+Hlavní částí tohoto projektu je projekt smap, který implementuje samotné zakódovávání a dekódování dat. Jedná se o konzolovou aplikaci, která pracuje ve dvou režimech, kódování a dekódování. Pro zakódování dat na papír dle popisu z předchozí kapitoly, bylo zapotřebí najít a použít další vhodné knihovny, které by zajistili potřebnou funkcionalitu.
+
+První z použitých knihoven je Cambia.BaseN, kterou aplikace využívá pro zakódování a dekódování dat do formátu Base64 a Base32. Tato knihovna je šířena pod open source licencí Microsoft Public License, která jako v případě MIT licence, umožňuje využití v komerční sféře, aniž by nutila zveřejňovat zdrojové kódy, a nenutí odvození dílo šířit pod touto licencí.
+
+%https://tldrlegal.com/license/microsoft-public-license-(ms-pl)
+
+Druhou použitou knihovnou je ZXing.Net. Jedná se o port Javovské knihovny ZXing, která je určená pro čtení a vytváření různých čárových kódu (EAN, Data matrix, QR kód,...). Jak již účel knihovny napovídá tuto knihovnu aplikace využívá k vytvoření QR kódu s meta daty při kódování dat a čtení QR kódu při dekódování dat. Tato knihovna je šířena pod open source licencí Apache 2.0, opět jako v předchozím případě je možné ji používat v komerčních projektech a nenutí, aby aplikace, které využívají tuto knihovnu byly šířeny pod touto licencí.
+
+% http://www.apache.org/licenses/LICENSE-2.0
+
+Třetí použitou knihovnou je PDFsharp, kterou aplikace využívá pro vytvoření PDF souboru se zakódovanými data, tak aby je bylo snadné vytisknout. Tato knihovna je šířena pod MIT licencí jako SharpLearning, takže opět jsou zachovány stejné výhody jako v předchozím případě.
+
+Poslední knihovnou, kterou aplikace využívá, která stojí za zmínku je SixLabors.ImageSharp. Jedná se o knihovnu sloužící pro manipulaci s 2D grafikou (obrázky), umožňující dělat různé pokročilejší operace s obrázky (ořezávání, rotace, změna měřítka,...). Tato knihovna je šířena pod licencí Apache 2.0, která nabízí stejné výhody jako v případě ZXing.Net. 
+
 \textbf{OBSAH}
 
 Tato kapitola by měla pojednávat o praktické implementaci nového řešení. Tedy jak dojít od teorie k implementaci a jak jsme to řešili my (vy).
