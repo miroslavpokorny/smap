@@ -228,7 +228,7 @@ namespace smap
                 var testObservations = csvReader.EnumerateRows(featureNames).ToF64Matrix();
                 testObservations.Map(p => p / 255);
                 
-                var model = ClassificationNeuralNetModel.Load(() => new StreamReader("../NeuralNetLearner/network.xml"));
+                var model = ClassificationNeuralNetModel.Load(() => new StreamReader("network.xml"));
                 var predictions = model.Predict(testObservations);
                 
                 var stringBuilder = new StringBuilder();
