@@ -18,12 +18,14 @@ namespace Test.Integration
         }
         
         [Test]
-        [TestCase("randomFile01")]
-        [TestCase("randomFile02")]
-        [TestCase("randomFile03")]
-        [TestCase("randomFile04")]
-        [TestCase("randomFile05")]
-        public void ShouldDecodeImageFileAndOutputSameFile(string fileName)
+        [TestCase("randomFile01", "dat")]
+        [TestCase("randomFile02", "dat")]
+        [TestCase("randomFile03", "dat")]
+        [TestCase("randomFile04", "dat")]
+        [TestCase("randomFile05", "dat")]
+        [TestCase("Database01", "kdbx")]
+        [TestCase("Database02", "kdbx")]
+        public void ShouldDecodeImageFileAndOutputSameFile(string fileName, string fileExtension)
         {
             var filesToDecode = Directory.GetFiles($"{ToProjectDir}Resources/Approve/Images").Where(x => x.Contains(fileName));
             PrepareDirInTempDir(fileName);
@@ -35,7 +37,7 @@ namespace Test.Integration
             RunProcessAsync("dotnet", $" {SmapProgram} -i {ToProjectDir}Resources/temp/{fileName} -o {ToProjectDir}Resources/temp/{fileName}/output -m Decode").Wait();
 
             Assert.True(File.Exists($"{ToProjectDir}Resources/temp/{fileName}/output/decoded"));
-            Assert.True(File.ReadAllBytes($"{ToProjectDir}Resources/Approve/{fileName}.dat").ToList().SequenceEqual(File.ReadAllBytes($"{ToProjectDir}Resources/temp/{fileName}/output/decoded")));
+            Assert.True(File.ReadAllBytes($"{ToProjectDir}Resources/Approve/{fileName}.{fileExtension}").ToList().SequenceEqual(File.ReadAllBytes($"{ToProjectDir}Resources/temp/{fileName}/output/decoded")));
         }
 
         private void PrepareDirInTempDir(string directoryName)
