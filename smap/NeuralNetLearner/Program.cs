@@ -23,7 +23,7 @@ namespace NeuralNetLearner
             networkHelper.LearnNetwork().Save(() => new StreamWriter("network.xml"));
             var time3 = stopwatch.Elapsed;
             Console.WriteLine($"Done in {time3 - time2}");
-            Console.WriteLine($"Total time of execution ${stopwatch.Elapsed}");
+            Console.WriteLine($"Total time of execution {stopwatch.Elapsed}");
         }
     }
 }

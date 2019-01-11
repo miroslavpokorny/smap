@@ -111,7 +111,7 @@ namespace smap
                 stringBuilder.Append(dataChunk.Data);
             }
 
-            var decodedBytes = Decoder.Decode(stringBuilder.ToString());
+            var decodedBytes = DecodeLetters(stringBuilder.ToString());
             File.WriteAllBytes($"{_options.Output}/decoded", decodedBytes);            
         }
 
@@ -234,7 +234,7 @@ namespace smap
                 var stringBuilder = new StringBuilder();
                 foreach (var prediction in predictions)
                 {
-                    stringBuilder.Append(Alphabet.Base32Alphabet.ToString()[(int) prediction]);
+                    stringBuilder.Append(Math.Abs(prediction - -1) < 0.01 ? '-' : Alphabet.Base32Alphabet.ToString()[(int) prediction]);
                 }
 
                 currentResult = stringBuilder.ToString();
