@@ -312,6 +312,7 @@
 
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}   % pro unicode UTF-8
+\usepackage{gensymb}
 
 
 \renewcommand\IEEEkeywordsname{Keywords}
@@ -629,7 +630,21 @@ Druhou použitou knihovnou je ZXing.Net. Jedná se o port Javovské knihovny ZXi
 
 Třetí použitou knihovnou je PDFsharp, kterou aplikace využívá pro vytvoření PDF souboru se zakódovanými data, tak aby je bylo snadné vytisknout. Tato knihovna je šířena pod MIT licencí jako SharpLearning, takže opět jsou zachovány stejné výhody jako v předchozím případě.
 
-Poslední knihovnou, kterou aplikace využívá, která stojí za zmínku je SixLabors.ImageSharp. Jedná se o knihovnu sloužící pro manipulaci s 2D grafikou (obrázky), umožňující dělat různé pokročilejší operace s obrázky (ořezávání, rotace, změna měřítka,...). Tato knihovna je šířena pod licencí Apache 2.0, která nabízí stejné výhody jako v případě ZXing.Net. 
+Poslední knihovnou, kterou aplikace využívá, která stojí za zmínku je SixLabors.ImageSharp. Jedná se o knihovnu sloužící pro manipulaci s 2D grafikou (obrázky), umožňující dělat různé pokročilejší operace s obrázky (ořezávání, rotace, změna měřítka,...). Tato knihovna je šířena pod licencí Apache 2.0, která nabízí stejné výhody jako v případě ZXing.Net.
+
+Aplikace je implementována tak, že v případě kódování dat předpokládá na vstupu název souboru, který má zakódovat, výstupem je pak pdf soubor, který může být vytištěn. V případě dekódování aplikace na vstupu předpokládá adresář, který obsahuje obrázky (každý obrázek reprezentuje jednu naskenovanou stránku, aktuální implementace předpokládá, že stránky nejsou příliš mnoho natočeny, tj. QR kód by měl být vlevo nahoře, a stránky by měla být vychýlena pouze minimálně). Aplikace poté postupně provede několik kroků. Nejprve je zapotřebí dekódovat QR kód a to hned ze dvou důvodů. Prvním důvodem je získání metadat a druhým je, jak již bylo zmíněno v předchozí kapitole, detekce tzv. finder patters v QR kódu, na základě kterých se detekuje úhel vychýlení stránky, který vznikl například při automatickém podávání papírů do skeneru při skenováním do počítače. Pro dekódování QR kódů se používá již výše zmíněná knihovna ZXing.Net. 
+
+Úhel vychýlení stránky se poté spočte tak, že se naleznou levé finder patterns v QR kódu, čímž získáme dva body v 2D prostoru. Pokud tyto dva body jsou rovnoběžné v ose Y, tak stránka s největší pravděpodobností není vychýlena/natočena. Pokud nejsou rovnoběžné jsme z těchto dvou bodů schopni spočítat délky odvěsen pravoúhlého trojúhelníku. Tyto strany lze poté využít k výpočtu úhlu vychýlení stránky pomocí goniometrické funkce tangens. To zda se jedná o natočení stránky po směru nebo proti směru hodinových ručiček se poté zjistí tak zda finder pattern umístěný na stránce výše je více nalevo (resp. napravo) než finder pattern umístěný níže.
+
+Další věc, ke které se umístění QR kódu použije je k označení oblasti s písmeny na stránce. Jak již bylo řečeno předpokládá se, že stránka má QR kód umístěný vlevo nahoře, z tohoto důvodu není nutné řešit nutnost rotace celé stránky (v tomto případě je myšlena rotace o 90\degree, 180\degree nebo 270\degree). Za předpokladu, že platí umístění QR kódu vlevo nahoře, můžeme na základě finder patterns spočítat horní hranici stránky, kde začíná oblast s písmeny, kterou poté využijeme při dalším zpracování.
+
+Před dalším zpracování je tedy stránka oříznuta a otočena, tak aby byla pokud možno rovně. Poté začíná samotné získávání jednotlivých písmen z obrazu. K tomuto účelu je použitý algoritmus podobný algoritmu scan line. Nejprve se snažíme získat jednotlivé řádky s textem, to se provede tak, že začneme úplně nahoře oříznutého obrázku a postupně kontrolujeme všechny horizontální pixely, pokud jsou bílé (barva pozadí, je zde opět využito metody prahování, tak aby se eliminoval šum, který by mohl vzniknout v důsledku skenování) tak se posouváme v ose Y. Jakmile narazíme na řádek (scan line), která obsahuje již černé pixely (tj. pixely s textem), tak si uložíme tuto souřadnici a pokračujeme v ,,skenování`` dalších řádků pixelů, ale s tím rozdílem, že hledáme první řádek, který bude celý složený z bílých pixelů. Jakmile jej najdeme, tak máme spočtenou horní a dolní souřadnici oblasti obsahující písmena řádku.
+
+V rámci oblasti řádku poté pokračujeme naprosto stejně s tím rozdílem, že provádíme vertikální ,,skenování`` (tj. procházíme řádek v ose X). Tímto způsobem získáme oblasti jednotlivých písmen. Jakmile máme oblast písmene, můžeme s ním provést stejné kroky, které byly provedeny při učení neuronové sítě (tj. provedeme změnu měřítka, tak aby obrázek s písmenem byl veliký 32x32 pixelů a poté provedeme prahování). Při fázi dekódování provádíme prahování s dvěma různými parametry, tak abychom v případě, že nebude souhlasit kontrolní součet, mohli zkusit data dekódovat ještě jednou (aktuální řešení data porovnává pouze dvakrát, tj. vždy tak jak je klasifikuje neuronová síť, pro zvýšení stability by bylo vhodné v případě, že ani jedna sada znaků nesedí provést porovnání rozdílů obou sad znaků a vyzkoušet další rozdílné kombinace, pokud by se nějaké našli). 
+
+Jak již bylo naznačeno po klasifikaci písmen je se použije neuronová sít, výstupem této klasifikace jsou číselné indexy, odpovídající pořadí písmene v kódovací abecedě. Díky tomu jsme schopni snadno tyto čísla převést na textový řetězec. Jakmile máme tento řetězec můžeme spočítat kontrolní součet pomocí hashovací funkce SHA1. Pokud se shoduje s kontrolním součtem uloženým v QR kódu, tak máme data dekódována správně (v tom případě si je připravíme do kolekce s uloženým indexem, určujícím jejich pořadí, a na pevný disk do složky s výstupem uložíme soubor obsahující tato dekódovaná data). V případě, že data jsou dekódována nekorektně je na standardní výstup aplikace vypsána informace o chybě a na pevný disk je uložen soubor, který je označen jako špatně dekódovaný, obsahující nesprávně klasifikovaná data (uživatel poté nemusí všechna data přepisovat do počítače ručně, ale provede pouze kontrolu, klasifikace dat v tomto souboru), tento případ užití by pokud možno neměl vůbec nastávat.
+
+Výše zmíněné kroky se provedou pro všechny obrázky (stránky) ve vstupním adresáři. Nakonec pokud jsou všechny stránky dekódovány správně, se provede spojení textového obsahu stránek do jednoho textového řetězce, na základě pořadí čísel stránek. Tento textový řetězec je následně dekódován zpět na pole/sekvenci/blok bajtů. Tyto bajty jsou uloženy do výstupního souboru na pevný disk. Soubor by měl být naprosto identický s původním souborem, který byl na papír zakódován.
 
 \textbf{OBSAH}
 
@@ -640,6 +655,8 @@ Tato kapitola by měla pojednávat o praktické implementaci nového řešení. 
 Rozsah je min. 1 strana, maximálně 2 strany.
 
 \section{Testing of developed application / Testování vyvinuté aplikace}
+
+Jelikož se jedná o počítačový program, tak některé klíčové části aplikace (kódování a dekódování textových řetězců, parsování metadat) byly pokryty unit testy. Na pokrytí veškeré funkcionality unit texty v rámci tohoto projektu bohužel nebyl čas.
 
 \textbf{OBSAH}
 
