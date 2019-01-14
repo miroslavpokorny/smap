@@ -48,7 +48,7 @@ Abychom mohli data zapsat na papírové médium je zapotřebí počítačová da
 
 Zvolíme-li tedy, že data budeme kódovat do textové podoby, tak aby byla ,,čitelná člověkem`` (například kódování binární dat do textové podoby pomocí kódování Base64, Base32,...), tak musíme také najít vhodný způsob jakým data budeme načítat zpátky do počítače. Jelikož máme data na papíře je nutné tyto obrazová/textová data přenést zpět do počítače za pomoci nějakého skenovacího zařízení, jehož výstupem je rastrový obrázek. Jakmile máme obrazová data naskenována v počítači můžeme začít s ,,automatizovanou`` rekonstrukcí těchto dat. Klasické OCR (optical character recognization) algoritmy nejsou pro tyto účely příliš vhodné, protože fungují spolehlivě hlavně pokud v textu, který dekódují existuje nějaký kontext (tj. data mají význam slov) a algoritmus je schopen v případě nejistoty rozhodnout, na základě ostatních znaků, nebo slov, který znak je v daném místě pravděpodobnější).
 
-Jelikož máme data v obrazové podobě a nemůžeme uplatnit algoritmy OCR, je zapotřebí aplikovat jiné řešení. Jako jedno z možných řešení je využití klasifikace jednotlivých písmen textu pomocí konvuločních neuronových sítí. Spolehlivost takovéhoto řešení bude závislá na kvalitě naučení neuronové sítě a přípravě/zpracováním vstupních dat před vstupem do klasifikačního procesu neuronové sítě.
+Jelikož máme data v obrazové podobě a nemůžeme uplatnit algoritmy OCR, je zapotřebí aplikovat jiné řešení. Jako jedno z možných řešení je využití klasifikace jednotlivých písmen textu pomocí konvuločních neuronových sítí \cite{NIPS2010_4136}. Spolehlivost takovéhoto řešení bude závislá na kvalitě naučení neuronové sítě a přípravě/zpracováním vstupních dat před vstupem do klasifikačního procesu neuronové sítě.
 
 Při dekódování dat je nutné také mít informaci o tom, zda se podařilo data do dekódovat správně, nebo zda během klasifikace došlo k chybě a nějaké znaky (písmena a čísla) jsou dekódovány nesprávně a je nutné provést nějaké korekční kroky. K ověření integrity dat je vhodné použít nějakou metodu kontrolního součtu. Pro tento účel lze využít hashovacích funkcí, které spočítají hash (otisk) dat (například hashovací funkce MD5, SHA1,...). V případě, že se data budou lišit, tak tyto otisky budou navzájem různé (je nutné volit správnou metodu spočtení tohoto otisku, tak aby možnost kolize byla nepravděpodobná). Pokud po rekonstrukci dat, a následném spočtení kontrolního součtu bude kontrolní součet odpovídat, můžeme s téměř naprostou jistotu prohlásit, že data jsou dekódována správně. Kontrolní součet je zapotřebí vhodně uložit, tak aby byl pro počítač snadno a správně dekódovatelný. V dnešní době umějí počítače a chytré telefony snadno dekódovat data uložená do QR kódu (za předpokladu, že ukládáme relativně malé množství dat).
 
@@ -157,6 +157,9 @@ V rámci této práce jsme si daly za cíl vytvořit aplikaci, která bude schop
 V řešení vidím jistý potencionál. Pokud by se dotáhly různé neduhy tohoto řešení (malá hustota dat na jednu A4, rychlost dekódování, uživatelský komfort (konzolová aplikace se neobsluhuje příliš dobře),...) tak by se mohlo jednat o plnohodnotné řešení/alternativa k existujícímu řešení, pro zálohu dat na papír.
 
 \begin{thebibliography}{1}
+	
+\bibitem{NIPS2010_4136}
+NGIAM,~Jiquan a et al. Advances in Neural Information Processing Systems 23: Tiled convolutional neural networks. Curran Associates, Inc., 2010 [Cit. 14. Leden 2019]. str. 1279-1287. Dostupné z: http://papers.nips.cc/paper/4136-tiled-convolutional-neural-networks.pdf 
 
 \bibitem{PaperDataStorage}
 ATWOOD,~Jeff. The Paper Data Storage Option. 31. Července 2009 [Cit. 14. Leden 2019]. Dostupné z: https://blog.codinghorror.com/the-paper-data-storage-option/
