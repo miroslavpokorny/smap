@@ -1,319 +1,12 @@
-%% bare_conf.tex
-%% V1.4b
-%% 2015/08/26
-%% by Michael Shell
-%% See:
-%% http://www.michaelshell.org/
-%% for current contact information.
-%%
-%% This is a skeleton file demonstrating the use of IEEEtran.cls
-%% (requires IEEEtran.cls version 1.8b or later) with an IEEE
-%% conference paper.
-%%
-%% Support sites:
-%% http://www.michaelshell.org/tex/ieeetran/
-%% http://www.ctan.org/pkg/ieeetran
-%% and
-%% http://www.ieee.org/
-
-%%*************************************************************************
-%% Legal Notice:
-%% This code is offered as-is without any warranty either expressed or
-%% implied; without even the implied warranty of MERCHANTABILITY or
-%% FITNESS FOR A PARTICULAR PURPOSE! 
-%% User assumes all risk.
-%% In no event shall the IEEE or any contributor to this code be liable for
-%% any damages or losses, including, but not limited to, incidental,
-%% consequential, or any other damages, resulting from the use or misuse
-%% of any information contained here.
-%%
-%% All comments are the opinions of their respective authors and are not
-%% necessarily endorsed by the IEEE.
-%%
-%% This work is distributed under the LaTeX Project Public License (LPPL)
-%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
-%% distributed and modified. A copy of the LPPL, version 1.3, is included
-%% in the base LaTeX documentation of all distributions of LaTeX released
-%% 2003/12/01 or later.
-%% Retain all contribution notices and credits.
-%% ** Modified files should be clearly indicated as such, including  **
-%% ** renaming them and changing author support contact information. **
-%%*************************************************************************
-
-
-% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
-% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
-% *** with production work. The IEEE's font choices and paper sizes can   ***
-% *** trigger bugs that do not appear when using other class files.       ***                          ***
-% The testflow support page is at:
-% http://www.michaelshell.org/tex/testflow/
-
-
-
 \documentclass[conference]{IEEEtran}
-% Some Computer Society conferences also require the compsoc mode option,
-% but others use the standard conference format.
-%
-% If IEEEtran.cls has not been installed into the LaTeX system files,
-% manually specify the path to it like:
-% \documentclass[conference]{../sty/IEEEtran}
 
+\usepackage{url}
 
-
-
-
-% Some very useful LaTeX packages include:
-% (uncomment the ones you want to load)
-
-
-% *** MISC UTILITY PACKAGES ***
-%
-%\usepackage{ifpdf}
-% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
-% compilation based on whether the output is pdf or dvi.
-% usage:
-% \ifpdf
-%   % pdf code
-% \else
-%   % dvi code
-% \fi
-% The latest version of ifpdf.sty can be obtained from:
-% http://www.ctan.org/pkg/ifpdf
-% Also, note that IEEEtran.cls V1.7 and later provides a builtin
-% \ifCLASSINFOpdf conditional that works the same way.
-% When switching from latex to pdflatex and vice-versa, the compiler may
-% have to be run twice to clear warning/error messages.
-
-
-
-
-
-
-% *** CITATION PACKAGES ***
-%
-%\usepackage{cite}
-% cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of the IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
-% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
-% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
-% \cite will automatically add leading space, if needed. Use cite.sty's
-% noadjust option (cite.sty V3.8 and later) if you want to turn this off
-% such as if a citation ever needs to be enclosed in parenthesis.
-% cite.sty is already installed on most LaTeX systems. Be sure and use
-% version 5.0 (2009-03-20) and later if using hyperref.sty.
-% The latest version can be obtained at:
-% http://www.ctan.org/pkg/cite
-% The documentation is contained in the cite.sty file itself.
-
-
-
-
-
-
-% *** GRAPHICS RELATED PACKAGES ***
-%
-\ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-\else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
-  % \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
-\fi
-% graphicx was written by David Carlisle and Sebastian Rahtz. It is
-% required if you want graphics, photos, etc. graphicx.sty is already
-% installed on most LaTeX systems. The latest version and documentation
-% can be obtained at: 
-% http://www.ctan.org/pkg/graphicx
-% Another good source of documentation is "Using Imported Graphics in
-% LaTeX2e" by Keith Reckdahl which can be found at:
-% http://www.ctan.org/pkg/epslatex
-%
-% latex, and pdflatex in dvi mode, support graphics in encapsulated
-% postscript (.eps) format. pdflatex in pdf mode supports graphics
-% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
-% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
-% not a bitmapped formats (.jpeg, .png). The IEEE frowns on bitmapped formats
-% which can result in "jaggedy"/blurry rendering of lines and letters as
-% well as large increases in file sizes.
-%
-% You can find documentation about the pdfTeX application at:
-% http://www.tug.org/applications/pdftex
-
-
-
-
-
-% *** MATH PACKAGES ***
-%
-%\usepackage{amsmath}
-% A popular package from the American Mathematical Society that provides
-% many useful and powerful commands for dealing with mathematics.
-%
-% Note that the amsmath package sets \interdisplaylinepenalty to 10000
-% thus preventing page breaks from occurring within multiline equations. Use:
-%\interdisplaylinepenalty=2500
-% after loading amsmath to restore such page breaks as IEEEtran.cls normally
-% does. amsmath.sty is already installed on most LaTeX systems. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/pkg/amsmath
-
-
-
-
-
-% *** SPECIALIZED LIST PACKAGES ***
-%
-%\usepackage{algorithmic}
-% algorithmic.sty was written by Peter Williams and Rogerio Brito.
-% This package provides an algorithmic environment fo describing algorithms.
-% You can use the algorithmic environment in-text or within a figure
-% environment to provide for a floating algorithm. Do NOT use the algorithm
-% floating environment provided by algorithm.sty (by the same authors) or
-% algorithm2e.sty (by Christophe Fiorio) as the IEEE does not use dedicated
-% algorithm float types and packages that provide these will not provide
-% correct IEEE style captions. The latest version and documentation of
-% algorithmic.sty can be obtained at:
-% http://www.ctan.org/pkg/algorithms
-% Also of interest may be the (relatively newer and more customizable)
-% algorithmicx.sty package by Szasz Janos:
-% http://www.ctan.org/pkg/algorithmicx
-
-
-
-
-% *** ALIGNMENT PACKAGES ***
-%
-%\usepackage{array}
-% Frank Mittelbach's and David Carlisle's array.sty patches and improves
-% the standard LaTeX2e array and tabular environments to provide better
-% appearance and additional user controls. As the default LaTeX2e table
-% generation code is lacking to the point of almost being broken with
-% respect to the quality of the end results, all users are strongly
-% advised to use an enhanced (at the very least that provided by array.sty)
-% set of table tools. array.sty is already installed on most systems. The
-% latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/array
-
-
-% IEEEtran contains the IEEEeqnarray family of commands that can be used to
-% generate multiline equations as well as matrices, tables, etc., of high
-% quality.
-
-
-
-
-% *** SUBFIGURE PACKAGES ***
-%\ifCLASSOPTIONcompsoc
-%  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
-%\else
-%  \usepackage[caption=false,font=footnotesize]{subfig}
-%\fi
-% subfig.sty, written by Steven Douglas Cochran, is the modern replacement
-% for subfigure.sty, the latter of which is no longer maintained and is
-% incompatible with some LaTeX packages including fixltx2e. However,
-% subfig.sty requires and automatically loads Axel Sommerfeldt's caption.sty
-% which will override IEEEtran.cls' handling of captions and this will result
-% in non-IEEE style figure/table captions. To prevent this problem, be sure
-% and invoke subfig.sty's "caption=false" package option (available since
-% subfig.sty version 1.3, 2005/06/28) as this is will preserve IEEEtran.cls
-% handling of captions.
-% Note that the Computer Society format requires a larger sans serif font
-% than the serif footnote size font used in traditional IEEE formatting
-% and thus the need to invoke different subfig.sty package options depending
-% on whether compsoc mode has been enabled.
-%
-% The latest version and documentation of subfig.sty can be obtained at:
-% http://www.ctan.org/pkg/subfig
-
-
-
-
-% *** FLOAT PACKAGES ***
-%
-%\usepackage{fixltx2e}
-% fixltx2e, the successor to the earlier fix2col.sty, was written by
-% Frank Mittelbach and David Carlisle. This package corrects a few problems
-% in the LaTeX2e kernel, the most notable of which is that in current
-% LaTeX2e releases, the ordering of single and double column floats is not
-% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
-% single column figure to be placed prior to an earlier double column
-% figure.
-% Be aware that LaTeX2e kernels dated 2015 and later have fixltx2e.sty's
-% corrections already built into the system in which case a warning will
-% be issued if an attempt is made to load fixltx2e.sty as it is no longer
-% needed.
-% The latest version and documentation can be found at:
-% http://www.ctan.org/pkg/fixltx2e
-
-
-%\usepackage{stfloats}
-% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
-% the ability to do double column floats at the bottom of the page as well
-% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
-% LaTeX2e). It also provides a command:
-%\fnbelowfloat
-% to enable the placement of footnotes below bottom floats (the standard
-% LaTeX2e kernel puts them above bottom floats). This is an invasive package
-% which rewrites many portions of the LaTeX2e float routines. It may not work
-% with other packages that modify the LaTeX2e float routines. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/pkg/stfloats
-% Do not use the stfloats baselinefloat ability as the IEEE does not allow
-% \baselineskip to stretch. Authors submitting work to the IEEE should note
-% that the IEEE rarely uses double column equations and that authors should try
-% to avoid such use. Do not be tempted to use the cuted.sty or midfloat.sty
-% packages (also by Sigitas Tolusis) as the IEEE does not format its papers in
-% such ways.
-% Do not attempt to use stfloats with fixltx2e as they are incompatible.
-% Instead, use Morten Hogholm'a dblfloatfix which combines the features
-% of both fixltx2e and stfloats:
-%
-% \usepackage{dblfloatfix}
-% The latest version can be found at:
-% http://www.ctan.org/pkg/dblfloatfix
-
-
-
-
-% *** PDF, URL AND HYPERLINK PACKAGES ***
-%
-%\usepackage{url}
-% url.sty was written by Donald Arseneau. It provides better support for
-% handling and breaking URLs. url.sty is already installed on most LaTeX
-% systems. The latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/url
-% Basically, \url{my_url_here}.
-
-
-
-
-% *** Do not adjust lengths that control margins, column widths, etc. ***
-% *** Do not use packages that alter fonts (such as pslatex).         ***
-% There should be no need to do such things with IEEEtran.cls V1.6 and later.
-% (Unless specifically asked to do so by the journal or conference you plan
-% to submit to, of course. )
-
-
-% correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}   % pro unicode UTF-8
 \usepackage{gensymb}
-
 
 \renewcommand\IEEEkeywordsname{Keywords}
 
@@ -321,20 +14,11 @@
 	\renewcommand{\abstractname}{Abstract}
 	\renewcommand{\refname}{References / Reference}
 }
+
 \begin{document}
-%
-% paper title
-% Titles are generally capitalized except for words such as a, an, and, as,
-% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
-% not capitalized unless they are the first or last word of the title.
-% Linebreaks \\ can be used within to get better formatting as desired.
-% Do not put math or special symbols in the title.
+
 \title{Zálohování počítačových dat na papír\\ a jejich rekonstrukce pomocí neuronové sítě}
 
-
-% author names and affiliations
-% use a multiple column layout for up to three different
-% affiliations
 \author{
 	\IEEEauthorblockN{Bc. Miroslav Pokorný}
 	\IEEEauthorblockA{Faculty of Informatics and Management\\
@@ -343,43 +27,10 @@
 		miroslav.pokorny@uhk.cz}
 }
 
-% conference papers do not typically use \thanks and this command
-% is locked out in conference mode. If really needed, such as for
-% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
-% after \documentclass
-
-% for over three affiliations, or if they all won't fit within the width
-% of the page, use this alternative format:
-% 
-%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
-%Homer Simpson\IEEEauthorrefmark{2},
-%James Kirk\IEEEauthorrefmark{3}, 
-%Montgomery Scott\IEEEauthorrefmark{3} and
-%Eldon Tyrell\IEEEauthorrefmark{4}}
-%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
-%Georgia Institute of Technology,
-%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
-%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
-%Email: homer@thesimpsons.com}
-%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
-%Telephone: (800) 555--1212, Fax: (888) 555--1212}
-%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
-
-
-
-
-% use for special paper notices
-%\IEEEspecialpapernotice{(Invited Paper)}
-
-
-
-
-% make the title area
 \maketitle
 
-% As a general rule, do not put math, special symbols or citations
-% in the abstract
 \begin{abstract}
+%TODO Abstrakt
 abstraktem se rozumí 10 až 15 řádků popisujících stručně obsah vašeho článku. Nejprve popište obecnou problematiku vašeho projektu, následně popište vámi řešený problém a pak čeho jste dosáhli a výsledky spolu s oblastí nasazení/použití.
 \end{abstract}
 
@@ -387,16 +38,6 @@ abstraktem se rozumí 10 až 15 řádků popisujících stručně obsah vašeho 
 	Záloha dat, neuronová síť, base32, base64, strojové učení, počítačová data na papíře
 \end{IEEEkeywords}
 
-
-
-% For peer review papers, you can put extra information on the cover
-% page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-%
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
 \section{Introduction / Úvod}
@@ -411,141 +52,21 @@ Jelikož máme data v obrazové podobě a nemůžeme uplatnit algoritmy OCR, je 
 
 Při dekódování dat je nutné také mít informaci o tom, zda se podařilo data do dekódovat správně, nebo zda během klasifikace došlo k chybě a nějaké znaky (písmena a čísla) jsou dekódovány nesprávně a je nutné provést nějaké korekční kroky. K ověření integrity dat je vhodné použít nějakou metodu kontrolního součtu. Pro tento účel lze využít hashovacích funkcí, které spočítají hash (otisk) dat (například hashovací funkce MD5, SHA1,...). V případě, že se data budou lišit, tak tyto otisky budou navzájem různé (je nutné volit správnou metodu spočtení tohoto otisku, tak aby možnost kolize byla nepravděpodobná). Pokud po rekonstrukci dat, a následném spočtení kontrolního součtu bude kontrolní součet odpovídat, můžeme s téměř naprostou jistotu prohlásit, že data jsou dekódována správně. Kontrolní součet je zapotřebí vhodně uložit, tak aby byl pro počítač snadno a správně dekódovatelný. V dnešní době umějí počítače a chytré telefony snadno dekódovat data uložená do QR kódu (za předpokladu, že ukládáme relativně malé množství dat).
 
-
-
-\textbf{OBSAH}
-
-V úvodu definovat oblast bádání (problematiky) a postupně se dostat k tomu, kde je problém (v závěrečné části úvodu).
-
-\textbf{ROZSAH}
-
-Tato kapitola by měla mít rozsah minimálně do konce první strany dokumentu. Maximálně však do poloviny levého sloupce na druhé straně.
-
-\textbf{CITACE}
-
-V této kapitole budou alespoň 3, lépe však 5 odkazů na literaturu, vztahující se k popisované problematice, aby bylo z textu patrné, že se jedná o aktuální téma.
-Minimálně je třeba nalézt 3 články z impaktovaných časopisů ISI WOK JCR, nebo z konferencí indexovaných ISI WOK CPCI. Najdete na stránce www.isiknowledge.com ale pouze pokud jste v rámci UHK (tedy buď na PC v budovách UHK, nebo přes VPN).
-
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure}
-
-% Note that the IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command,
-% and the \label for the overall figure must come after \caption.
-% \hfil is used as a separator to get equal spacing.
-% Watch out that the combined width of all the subfigures on a 
-% line do not exceed the text width or a line break will occur.
-%
-%\begin{figure*}[!t]
-%\centering
-%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
-%\label{fig_second_case}}
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat[]), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
-% labels, the optional argument to \subfloat must be present. If a
-% subcaption is not desired, just leave its contents blank,
-% e.g., \subfloat[].
-
-
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table and, given that table
-% captions serve much like titles, are usually capitalized except for words
-% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
-% and up, which are usually not capitalized unless they are the first or
-% last word of the caption. Table text will default to \footnotesize as
-% the IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that the IEEE does not put floats in the very first column
-% - or typically anywhere on the first page for that matter. Also,
-% in-text middle ("here") positioning is typically not used, but it
-% is allowed and encouraged for Computer Society conferences (but
-% not Computer Society journals). Most IEEE journals/conferences use
-% top floats exclusively. 
-% Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the
-% \fnbelowfloat command of the stfloats package.
+% TODO 3-5 zdrojů
 
 \section{Problem definition / Definice problémů}
 
-Pokud budeme chtít zálohovat počítačová data na papír, tak se nám otevírá daleko více možností, než by se na první pohled mohlo zdát. V minulosti počítače běžně používaly papír jako paměťové médium. Na tzv. děrné štítky se ukládaly jak data, tak programy, které počítače zpracovávaly. Děrný štítek jako takový neměl nikdy příliš velkou kapacitu. Děrný štítek 5081 (5081 punch card) mohl nést informaci až o 80 alfanumerických znaků. Ačkoliv děrné štítky byly spolehlivé, v dnešní době se jedná o zastaralou technologii a pro jejich vytvoření/čtení je zapotřebí specializovaný hardware, který v dnešní době již není běžný. 
-
-% https://blog.codinghorror.com/the-paper-data-storage-option/
+Pokud budeme chtít zálohovat počítačová data na papír, tak se nám otevírá daleko více možností, než by se na první pohled mohlo zdát. V minulosti počítače běžně používaly papír jako paměťové médium \cite{PaperDataStorage}. Na tzv. děrné štítky se ukládaly jak data, tak programy, které počítače zpracovávaly. Děrný štítek jako takový neměl nikdy příliš velkou kapacitu. Děrný štítek 5081 (5081 punch card) mohl nést informaci až o 80 alfanumerických znaků. Ačkoliv děrné štítky byly spolehlivé, v dnešní době se jedná o zastaralou technologii a pro jejich vytvoření/čtení je zapotřebí specializovaný hardware, který v dnešní době již není běžný. 
 
 Další možnosti jak zálohovat data na papír je využití nějakého prostředku pro automatizovaný sběr dat. Příkladem těchto prostředků mohou být kódy typu data matrix, QR kód, nebo EAN čárový kód. Tyto kódy jsou standardizované a existuje velké množství softwarových řešení, které umí tyto kódy generovat a číst. Nevýhodou těchto kódů pak je, že jsou pro člověka velice těžce čitelné, a jejich rozluštění v případě potřeby by pro člověka mohlo být velice náročné (ne-li nemožné).
 
-Jedno možné řešení implementoval Grant Trebbin. Jeho řešení neimplementuje žádný samostatný program, ale pouze využívá nástrojů/utilitek dostupných na linuxových operačních systémech. Jeho řešení spočívá v tom, že data nejprve zakóduje do kódování base64. Poté data rozseká na menší části, tak aby se vešli do QR kódu. Poté pro každý úsek dat vygeneruje jeden QR kód. Následně jsou vytvořeny jednotlivé stránky, které obsahují více QR kódu, tyto stránky pak mohou být vytištěny. Po načtení kódu zpět do počítače, jsou kódy postupně dekódovány a z jednotlivých částí je slepen původní base64 soubor. Jakmile existuje soubor s base64 textem, může se opět dekódovat do původní binární podoby. Toto řešení má výhodu ve využití běžně dostupných nástrojů v operačním systému. Nevýhodu je absence automatice řešení, tj. pro kódování a dekódování dat je nutné, aby uživatel spouštěl příkazy ručně.
+Jedno možné řešení implementoval Grant Trebbin \cite{GrantTrebbin}. Jeho řešení neimplementuje žádný samostatný program, ale pouze využívá nástrojů/utilitek dostupných na linuxových operačních systémech. Jeho řešení spočívá v tom, že data nejprve zakóduje do kódování base64. Poté data rozseká na menší části, tak aby se vešli do QR kódu. Poté pro každý úsek dat vygeneruje jeden QR kód. Následně jsou vytvořeny jednotlivé stránky, které obsahují více QR kódu, tyto stránky pak mohou být vytištěny. Po načtení kódu zpět do počítače, jsou kódy postupně dekódovány a z jednotlivých částí je slepen původní base64 soubor. Jakmile existuje soubor s base64 textem, může se opět dekódovat do původní binární podoby. Toto řešení má výhodu ve využití běžně dostupných nástrojů v operačním systému. Nevýhodu je absence automatice řešení, tj. pro kódování a dekódování dat je nutné, aby uživatel spouštěl příkazy ručně.
 
-% https://www.grant-trebbin.com/2015/05/encode-and-decode-file-backed-up-as.html  
+Alternativní možností jak zálohovat data na papír (v tomto případě se nemusí jednat jen o papír, ale jakékoliv vizuální médium) je tzv. dataglyph \cite{DataGlyphsFreePatenstsOnline}\cite{dataglyphs}. V tomto případě jsou binární data zakódována do vizuální podoby pomocí sekvencí šikmých čar (lomítek a zpětných lomítek), které reprezentují jedničky a nuly dat. Jedná se o jeden z typů ,,čárových kódů``, které jsou snadno zpracovatelné počítačem. Tento typ kódu lze kombinovat (zakódovat) dohromady s obrázkem, tak aby byl pro člověka na první pohled skrytý, ale pro počítač stále dobře čitelný. Toto řešení není příliš vhodné pro uložení velkého množství informací. Další nevýhodou tohoto řešení je to, že nemá otevřený zdrojový kód (open source) a v případě, že by jsme jej chtěly využít budeme potřebovat patřičnou licenci.
 
-Alternativní možností jak zálohovat data na papír (v tomto případě se nemusí jednat jen o papír, ale jakékoliv vizuální médium) je tzv. dataglyph. V tomto případě jsou binární data zakódována do vizuální podoby pomocí sekvencí šikmých čar (lomítek a zpětných lomítek), které reprezentují jedničky a nuly dat. Jedná se o jeden z typů ,,čárových kódů``, které jsou snadno zpracovatelné počítačem. Tento typ kódu lze kombinovat (zakódovat) dohromady s obrázkem, tak aby byl pro člověka na první pohled skrytý, ale pro počítač stále dobře čitelný. Toto řešení není příliš vhodné pro uložení velkého množství informací. Další nevýhodou tohoto řešení je to, že nemá otevřený zdrojový kód (open source) a v případě, že by jsme jej chtěly využít budeme potřebovat patřičnou licenci.
+Dalším jednoduchým prográmkem, který zálohuje data na papír je \emph{paperbackup.py} \cite{PaperBackup}. Jak již název napovídá jedná se o řešení implementované v programovacím jazyce python. Paperbackup je primárně určen pro zálohy šifrovacích klíčů (GnuPG (v ASCII podobě), SSH) nebo šifrovaného textu. Výstupem programu je pdf soubor, který může být vytištěn na papír. Obsahem tohoto souboru jsou stránky obsahující QR kódy, u každého kódu je textová informace o jakou část dat se jedná. Na konci souboru je pak, pro případ selhání dekódování QR kódů, vytištěn plaintextový obsah zálohovaného souboru. 
 
-% http://www.freepatentsonline.com/6641053.html
-% http://www.microglyphs.com/english/html/dataglyphs.shtml
-
-Dalším jednoduchým prográmkem, který zálohuje data na papír je \emph{paperbackup.py}. Jak již název napovídá jedná se o řešení implementované v programovacím jazyce python. Paperbackup je primárně určen pro zálohy šifrovacích klíčů (GnuPG (v ASCII podobě), SSH) nebo šifrovaného textu. Výstupem programu je pdf soubor, který může být vytištěn na papír. Obsahem tohoto souboru jsou stránky obsahující QR kódy, u každého kódu je textová informace o jakou část dat se jedná. Na konci souboru je pak, pro případ selhání dekódování QR kódů, vytištěn plaintextový obsah zálohovaného souboru. 
-
-% https://github.com/intra2net/paperbackup
-
-Nejvíce propracovaným existujícím řešením, pro zálohu dat na papír se zdá být aplikace PaperBack. PaperBack je open source řešní, šířené pod licencí GNU General Public License, version 3. Tato aplikace ukládá data na papír ve formě bitmapových obrázků (jsou velice podobné QR kódům, nebo spíše data matrix kódům, protože neobsahují ,,finder pattern`` čtverce, tak jako QR kódy), které mají formát specificky vyvinutý pro účely této aplikace. Toto řešení umí v případě kvalitní tiskárny uložit až 500000 bajtů nekomprimovaných dat na jednu stranu A4. Řešení PaperBack má integrované komprimační algoritmy, pomocí kterých je v ideálním případě možné uložit na jednu stranu A4 až 3 MB dat. Další vlastností této aplikace je integrovaný mechanismus šifrování dat. Data předaná aplikaci, aby je zálohovala, mohou být před vytištěním zašifrována, pomocí algoritmu AES-192, tak aby v případě, krádeže papíru byla data ochráněna, tj. útočník sice získá papíry s daty, ale bez správného hesla, je nebude schopen obnovit.
-
-% http://www.aishack.in/tutorials/scanning-qr-codes-1/
-% http://ollydbg.de/Paperbak/
+Nejvíce propracovaným existujícím řešením, pro zálohu dat na papír se zdá být aplikace PaperBack \cite{PaperBak}. PaperBack je open source řešní, šířené pod licencí GNU General Public License, version 3. Tato aplikace ukládá data na papír ve formě bitmapových obrázků (jsou velice podobné QR kódům \cite{ScanningQrCodes}, nebo spíše data matrix kódům, protože neobsahují ,,finder pattern`` čtverce, tak jako QR kódy), které mají formát specificky vyvinutý pro účely této aplikace. Toto řešení umí v případě kvalitní tiskárny uložit až 500000 bajtů nekomprimovaných dat na jednu stranu A4. Řešení PaperBack má integrované komprimační algoritmy, pomocí kterých je v ideálním případě možné uložit na jednu stranu A4 až 3 MB dat. Další vlastností této aplikace je integrovaný mechanismus šifrování dat. Data předaná aplikaci, aby je zálohovala, mohou být před vytištěním zašifrována, pomocí algoritmu AES-192, tak aby v případě, krádeže papíru byla data ochráněna, tj. útočník sice získá papíry s daty, ale bez správného hesla, je nebude schopen obnovit.
 
 Všechny uvedené existující aplikace/metody využívají společný princip, kdy data, které zálohujeme jsou uloženy na papír ve formě grafické reprezentace (tj. jedná se o nějakou bitmapu, ve které jsou data zakódována). Výhodou uložení dat do bitmapy (například QR kódu) je to, že jsme schopni uložit relativně velké množství informací na malou plochu papíru. Rekonstrukce těchto dat pak záleží na dvou faktorech. Prvním je kvalita tiskárny, pomocí které budou data na papír tištěna, tak aby se nějaká informace neztratila už během tisku. Druhý důležitý faktor je načítání dat zpět do počítače. Pro účely načtení dat je nutné mít nějaké kvalitní skenovací zařízení, tak aby se žádná informace neztratila při načítání dat do počítače. 
 
@@ -553,64 +74,33 @@ Nevýhodou těchto řešení je to, že pro obnovu dat je zapotřebí mít k dis
 
 Žádný z existujících řešení nevyužil možnosti data, zálohovat zakódovaná v textové podobě, tak aby v případě potřeby (selhání dekódovacího programu) bylo možné, aby je dekódoval sám člověk. Z tohoto důvodu budeme v této práci dále pojednávat o řešení, které data uloží na papír v textové podobě, tak aby je byl člověk v případě potřeby schopen převést do počítače sám ručně (program sám o sobě by měl být dostatečně stabilní, tak, aby k tomuto případu docházelo jen zřídka, ne-li vůbec). 
 
-
-
-\textbf{OBSAH}
-
-V této kapitole je třeba definovat problém a ukázat alespoň tři řešení (lépe 5) od někoho jiného (formou odstavce shrnujícího přístup dotyčného (3 až 5 řádků)). Kapitola by měla končit konstatováním, že žádný z přístupů neřeší definovaný problém tak, jak by bylo třeba (jak bychom potřebovali my) a proto je třeba najít nový způsob (ten náš), o kterém se bude pojednávat v další kapitole.
-
-\textbf{ROZSAH}
-
-Tato kapitola by měla mít rozsah cca 1 stranu.
-
-\textbf{CITACE}
-
-V této kapitole budou alespoň 3, lépe však 5 odkazů na literaturu, vztahující se k popisované problematice, aby bylo z textu patrné, že se jedná o aktuální téma.
-
-
 \section{New solution / Nové řešení}
 
 V rámci této práce tedy bude nevrženo nové alternativní řešení, které by mělo řešit neduhy řešení existujících. Nové řešení by by melo implementovat 2 nutné funkce. 1. funkcí je zakódování libovolných dat (neřešíme zda se jedná o data binární nebo textová, ale chováme se k ním vždy naprosto stejně, tj. pro program se bude vždy jednat o sekvenci/blok/pole bajtů) na papír. 2. neméně důležitá funkce je, že řešení musí být schopné výstup z kroku kódování také dekódovat a rekonstruovat vstupní data do stejné podoby v jaké byly na vstupu fáze kódování. 
 
 Při rekonstrukci dat (tj. načítání dat z papíru do počítače a jejich dekódování) musí být také počítač schopen rozhodnout zda se data načetla korektně, z tohoto důvodu je velice žádoucí zavést mechanismus kontrolního součtu, pomocí kterého jsme velice rychle schopni rozhodnout, zda se data nečetla korektně, nebo nikoliv a je potřeba zkusit data dekódovat znovu (například s upravenými parametry dekódování), nebo informovat uživatele o chybě.
 
-Rozhodl jsem se pro variantu kódování data do textové podoby, tak aby v případě selhání programu při dekódování byla šance, že uživatel bude schopen data alespoň ručně přepsat do počítače a následně rekonstruovat. Velice důležité tedy je na samém počátku návrhu řešení se zamyslet na tím jak budeme chtít data dekódovat. Klasické OCR algoritmy nemusí být příliš přesné na sekvenci náhodných znaků. Z tohoto důvodu jsem se rozhodl experimentálně vyzkoušet řešení, které bude využívat konvoluční neuronové sítě, kterou využije ke klasifikaci jednotlivých písmen načteného textu.
+Rozhodl jsem se pro variantu kódování data do textové podoby, tak aby v případě selhání programu při dekódování byla šance, že uživatel bude schopen data alespoň ručně přepsat do počítače a následně rekonstruovat. Velice důležité tedy je na samém počátku návrhu řešení se zamyslet na tím jak budeme chtít data dekódovat. Klasické OCR algoritmy nemusí být příliš přesné na sekvenci náhodných znaků. Z tohoto důvodu jsem se rozhodl experimentálně vyzkoušet řešení, které bude využívat konvoluční neuronové sítě, kterou využije ke klasifikaci jednotlivých písmen načteného textu.s
 
-% http://apps.webofknowledge.com/full_record.do?product=WOS&search_mode=GeneralSearch&qid=7&SID=D5UEQa9vmc34T3srqeS&page=1&doc=10
-
-Když víme jak budeme chtít data dekódovat můžeme se vrátit k fázi kódování dat. Pro prvotní prototyp řešení jsem se rozhodl využít některého z konvenčních kódování binárních data do textové podoby. Pro kódování dat bude tedy využito BaseN kódování (Base64, Base32, Base16,...). Čím vyšší N u kódování zvolíme, tím větší bude hustota dat, které pomocí jednoho znaku zakódujeme, na druhé straně nám roste počet znaků, které se mohou ve výstupu objevit a tím pádem také roste pravděpodobnost, záměny (nesprávné klasifikace) některých podobných znaků (například znaky číslice nula 0, malé a velké O latinky, jsou velice podobné). Z tohoto důvodu je vhodné využít upravenou znakovou sadu, tak aby se předešlo nesprávné klasifikaci. Z tohoto důvodu vypadá kódování Base32 velice slušně, protože je složeno pouze z velkých písmen latinky a omezeného počtu číslic (2-7), tak aby se vynechaly podobné znaky.
-
-% https://tools.ietf.org/html/rfc4648
+Když víme jak budeme chtít data dekódovat můžeme se vrátit k fázi kódování dat. Pro prvotní prototyp řešení jsem se rozhodl využít některého z konvenčních kódování binárních data do textové podoby. Pro kódování dat bude tedy využito BaseN kódování \cite{RFC4648} (Base64, Base32, Base16,...). Čím vyšší N u kódování zvolíme, tím větší bude hustota dat, které pomocí jednoho znaku zakódujeme, na druhé straně nám roste počet znaků, které se mohou ve výstupu objevit a tím pádem také roste pravděpodobnost, záměny (nesprávné klasifikace) některých podobných znaků (například znaky číslice nula 0, malé a velké O latinky, jsou velice podobné). Z tohoto důvodu je vhodné využít upravenou znakovou sadu, tak aby se předešlo nesprávné klasifikaci. Z tohoto důvodu vypadá kódování Base32 velice slušně, protože je složeno pouze z velkých písmen latinky a omezeného počtu číslic (2-7), tak aby se vynechaly podobné znaky.
 
 Důležitý faktor je také, jaký zvolíme font, pro kódování jednotlivých znaků, některé fonty mají snadno rozeznatelné znaky, u některých se jejich přečtení o poznání těžší. Některé fonty mají také každý znak jinak veliký (resp. široký). Aby bylo dekódování jednodušší rozhodl jsem se, že data budou na papír zapsána neproporcionálním fontem \cite{Book:TheTypographicDeskReference} (monospaced font), který má všechny znaky stejně široké, čímž můžeme snadno zajistit, že na každém řádku bude vždy (maximálně) stejný počet znaků (tj. s výjimkou posledního řádku na stránce). Existuje velké množství monospaced fontů. Rozhodl jsem se využít neproporcionální font Consolas.
 
 Když máme zvolen vhodný font je nutné zvolit, ještě vhodnou velikost písmen, tak aby byly snadno čitelné, a to jak pro počítač po načtení skenerem, tak pro člověka, v případě, že bude potřebovat data dekódovat ručně. Pro prvotní prototyp jsem zvolil, velikost fontu 12. Pro snazší detekci jednotlivcích písmen je mezi každé dva znaky přidána navíc drobná mezera. Výsledkem pak tedy máme ,,matici`` písmen. Při této velikosti se na řádek vejde 58 znaků a na stránku se vejde 48 řádků, celkem se tedy vejde na stánku 2784 znaků. Jelikož Base32 zakóduje 5 bajtů do 8 znaků vejde se na stránku maximálně 1740 bajtů původních dat.
 
-Jak již bylo zmíněno výše je zapotřebí také mít možnost rychlé detekce chyby v případě, že při dekódování dojde k nesprávné klasifikaci nějakého písmene. Z tohoto důvodu je zapotřebí přidat na každou stránku informaci o kontrolním součtu (tj. z písmen na stránce bude vypočítán hash, který v případě, že při dekódování nastane nějaká chyba bude odlišný od hashe, který se spočte z dekódovaných písmen, pokud hashe budou stejné budeme vědět, že data byla dekódována správně). Pro výpočty kontrolních součtů jsem se rozhodl využít hashovací algoritmus SHA1, který produkuje hashe o velikosti 20 bajtů.
-
-% https://tools.ietf.org/html/rfc3174
+Jak již bylo zmíněno výše je zapotřebí také mít možnost rychlé detekce chyby v případě, že při dekódování dojde k nesprávné klasifikaci nějakého písmene. Z tohoto důvodu je zapotřebí přidat na každou stránku informaci o kontrolním součtu (tj. z písmen na stránce bude vypočítán hash, který v případě, že při dekódování nastane nějaká chyba bude odlišný od hashe, který se spočte z dekódovaných písmen, pokud hashe budou stejné budeme vědět, že data byla dekódována správně). Pro výpočty kontrolních součtů jsem se rozhodl využít hashovací algoritmus SHA1 \cite{RFC3174}, který produkuje hashe o velikosti 20 bajtů.
 
 V případě, že se nám promíchají jednotlivé papíry (v případě, že data budou zakódována na více papírů), je také nutné na papír uložit informaci o tom, jakou část dat papír obsahuje. K tomuto účelu postačí jednoduchý číselný identifikátor, který bude říkat, o jakou stránku se jedná. Dále pro zjednodušení práce dekódování může být na papír uložena další informace o tom, kolik znaků je na stránce celkem uloženo a v poslední řadě také informaci o tom z kolika zakódovaných znaků se skládají původní data. Celkově tedy na papír kromě kontrolního součtu uložíme ještě další 3 celá čísla (ani u jednoho nedává smysl znaménko, takže se bude jednat o celá čísla bez znaménka), které zaberou celkem dalších 12 bajtů. 
 
-Máme tedy, s kontrolním součtem, 32 bajtů ,,metadat``, které musíme nějakým snadno rekonstruovatelným způsobem uložit na stránku. Pro účely uložení těchto metadat se ukazuje, že QR kód by mohl být elegantním řešením jak tato data uložit. Metadata budou zakódována nejprve na jednotlivé bajty v následujícím pořadí. První čtyři bajty reprezentují celočíselné kladné číslo (unsigned integer) jehož význam je celkový počet písmen zakódovaných dat (pozn. unsigned integer je uložen ve formátu little-endian). Další 4 bajty reprezentují (unsigned integer) jehož význam je celkový počet písmen na stránce. Následující 4 bajty reprezentují (unsigned integer) jehož význam je pořadí dat (tj. o jakou se jedná stránku). Na konec je uloženo 20 bajtů reprezentující kontrolní součet spočtený algoritmem SHA1. 
-
-% https://www.ietf.org/rfc/ien/ien137.txt little endian
+Máme tedy, s kontrolním součtem, 32 bajtů ,,metadat``, které musíme nějakým snadno rekonstruovatelným způsobem uložit na stránku. Pro účely uložení těchto metadat se ukazuje, že QR kód by mohl být elegantním řešením jak tato data uložit. Metadata budou zakódována nejprve na jednotlivé bajty v následujícím pořadí. První čtyři bajty reprezentují celočíselné kladné číslo (unsigned integer) jehož význam je celkový počet písmen zakódovaných dat (pozn. unsigned integer je uložen ve formátu little-endian \cite{IEN137:LittleEndian}). Další 4 bajty reprezentují (unsigned integer) jehož význam je celkový počet písmen na stránce. Následující 4 bajty reprezentují (unsigned integer) jehož význam je pořadí dat (tj. o jakou se jedná stránku). Na konec je uloženo 20 bajtů reprezentující kontrolní součet spočtený algoritmem SHA1. 
 
 Jak již bylo zmíněno dříve snažíme se, aby data v případě nouze byly relativně snadno rekonstruovatelná člověkem, proto tato binární data zakódujeme ještě do Base64, tak aby šli snadno přečíst pomocí čteček QR kódu (například na mobilním telefonu). QR kód s Base64 textem je poté vložen na stánku vlevo nahoře. Umístění QR kódu nám dává také možnost jistých kalibrací a dopočtení dalších informací. Například na základě umístění finder patterns v QR kódu jsme schopni detekovat to, zda není stránka lehce natočená (např. v důsledku skenování) a provést patřičné korekce.
-
-\textbf{OBSAH}
-
-V této kapitole je třeba přesně popsat nový způsob řešení a to včetně nutné teorie, která s tím souvisí. 
-
-\textbf{ROZSAH}
-
-Rozsahem je minimálně 1 strana a max. 2 strany.
 
 \section{Implementation / Implementace řešení}
 
 Pro implementaci řešení popsaného v předchozí kapitole jsem zvolil programovací jazyk C\# a platformu .NET Core, která umožňuje výslednou aplikaci spustit na všech v dnešní době běžných operačních systémech (Windows, Linux, OS X).
 
-Jelikož dne návrhu nového řešení budou písmena dekódována pomocí neuronové sítě, bylo zapotřebí najít nějakou vhodnou knihovnu, kterou by šlo použít. V rámci tohoto projektu jsem zvolil knihovnu SharpLearning, kvůli relativně jednoduchému API a open source licenci MIT, která například umožňuje využít knihovnu i v komerčních aplikacích, aniž by nutila uvolňovat zdrojové kódy těchto aplikací a nenutí aplikaci dále šířit pod touto licencí.
+Jelikož dne návrhu nového řešení budou písmena dekódována pomocí neuronové sítě, bylo zapotřebí najít nějakou vhodnou knihovnu, kterou by šlo použít. V rámci tohoto projektu jsem zvolil knihovnu SharpLearning, kvůli relativně jednoduchému API a open source licenci MIT \cite{MITLicense}, která například umožňuje využít knihovnu i v komerčních aplikacích, aniž by nutila uvolňovat zdrojové kódy těchto aplikací a nenutí aplikaci dále šířit pod touto licencí.
 
 Jednou z nejdůležitějších věcí, aby vše fungovalo, je správné naučení neuronové sítě. Z tohoto důvodu u projektu vznikl další ,,pod projekt`` NeuralNetLearner, jehož účelem je vygenerování dat, která jsou poté použita pro naučení neuronové sítě. Program funguje tak, že postupně vytvoří obrázky se všemi písmeny Base32 abecedy ve fontu Consolas (pokaždé jedno písmeno jeden obrázek). Postupně je vytvořeno několik obrázků s písmeny v různých velikostech. 
 
@@ -620,13 +110,9 @@ Výsledkem této pomocné aplikace je soubor network.xml, s naučenou neuronovou
 
 Hlavní částí tohoto projektu je projekt smap, který implementuje samotné zakódovávání a dekódování dat. Jedná se o konzolovou aplikaci, která pracuje ve dvou režimech, kódování a dekódování. Pro zakódování dat na papír dle popisu z předchozí kapitoly, bylo zapotřebí najít a použít další vhodné knihovny, které by zajistili potřebnou funkcionalitu.
 
-První z použitých knihoven je Cambia.BaseN, kterou aplikace využívá pro zakódování a dekódování dat do formátu Base64 a Base32. Tato knihovna je šířena pod open source licencí Microsoft Public License, která jako v případě MIT licence, umožňuje využití v komerční sféře, aniž by nutila zveřejňovat zdrojové kódy, a nenutí odvození dílo šířit pod touto licencí.
+První z použitých knihoven je Cambia.BaseN, kterou aplikace využívá pro zakódování a dekódování dat do formátu Base64 a Base32. Tato knihovna je šířena pod open source licencí Microsoft Public License \cite{MicrosoftPublicLicense}, která jako v případě MIT licence, umožňuje využití v komerční sféře, aniž by nutila zveřejňovat zdrojové kódy, a nenutí odvození dílo šířit pod touto licencí.
 
-%https://tldrlegal.com/license/microsoft-public-license-(ms-pl)
-
-Druhou použitou knihovnou je ZXing.Net. Jedná se o port Javovské knihovny ZXing, která je určená pro čtení a vytváření různých čárových kódu (EAN, Data matrix, QR kód,...). Jak již účel knihovny napovídá tuto knihovnu aplikace využívá k vytvoření QR kódu s meta daty při kódování dat a čtení QR kódu při dekódování dat. Tato knihovna je šířena pod open source licencí Apache 2.0, opět jako v předchozím případě je možné ji používat v komerčních projektech a nenutí, aby aplikace, které využívají tuto knihovnu byly šířeny pod touto licencí.
-
-% http://www.apache.org/licenses/LICENSE-2.0
+Druhou použitou knihovnou je ZXing.Net. Jedná se o port Javovské knihovny ZXing, která je určená pro čtení a vytváření různých čárových kódu (EAN, Data matrix, QR kód,...). Jak již účel knihovny napovídá tuto knihovnu aplikace využívá k vytvoření QR kódu s meta daty při kódování dat a čtení QR kódu při dekódování dat. Tato knihovna je šířena pod open source licencí Apache 2.0 \cite{ApacheLicense}, opět jako v předchozím případě je možné ji používat v komerčních projektech a nenutí, aby aplikace, které využívají tuto knihovnu byly šířeny pod touto licencí.
 
 Třetí použitou knihovnou je PDFsharp, kterou aplikace využívá pro vytvoření PDF souboru se zakódovanými data, tak aby je bylo snadné vytisknout. Tato knihovna je šířena pod MIT licencí jako SharpLearning, takže opět jsou zachovány stejné výhody jako v předchozím případě.
 
@@ -646,14 +132,6 @@ Jak již bylo naznačeno po klasifikaci písmen je se použije neuronová sít, 
 
 Výše zmíněné kroky se provedou pro všechny obrázky (stránky) ve vstupním adresáři. Nakonec pokud jsou všechny stránky dekódovány správně, se provede spojení textového obsahu stránek do jednoho textového řetězce, na základě pořadí čísel stránek. Tento textový řetězec je následně dekódován zpět na pole/sekvenci/blok bajtů. Tyto bajty jsou uloženy do výstupního souboru na pevný disk. Soubor by měl být naprosto identický s původním souborem, který byl na papír zakódován.
 
-\textbf{OBSAH}
-
-Tato kapitola by měla pojednávat o praktické implementaci nového řešení. Tedy jak dojít od teorie k implementaci a jak jsme to řešili my (vy).
-
-\textbf{ROZSAH}
-
-Rozsah je min. 1 strana, maximálně 2 strany.
-
 \section{Testing of developed application / Testování vyvinuté aplikace}
 
 Po implementaci je nutné ověřit, zda vše funguje jak má. Z tohoto důvodu je nutné aplikaci otestovat. Jelikož se jedná o počítačový program, tak některé klíčové části aplikace (kódování a dekódování textových řetězců, parsování metadat) byly pokryty jednotkovými testy (unit testy). Na pokrytí veškeré funkcionality unit texty v rámci tohoto projektu bohužel nebyl čas. Z tohoto důvodu byla přidána sada ,,integračních`` testů, které zkoušejí tzv. end-to-end scénář (tj. provolávají existující aplikaci a zkoušejí, zda pro zadané vstupy vrací aplikace očekávaný výstup. Tj. výstupem testování aplikace je projekt Test, který obsahuje malou sadu unit testů a některé větší ,,integrační`` testy, které ověřují funkcionalitu celé aplikace. Tak aby se dalo prohlásit, že aplikace je napsaná ,,korektně`` a je funkční je zapotřebí aby všechny tyto testy procházely (tj. ,,byly zelené``).
@@ -672,78 +150,56 @@ Jelikož řešení PaperBak využívá pro zapsání dat matice ,,čtverečků``
 
 Pokud porovnáme rychlost dekódování dopadne řešení PaperBak výrazně lépe, protože nepotřebuje využívat relativně složitých výpočtů neuronových sítí na straně jedné a je daleko lépe optimalizované, nežli řešení implementované v rámci této práce (řešení implementované v rámci této práce slouží spíše jako prototyp/demonstrace možného řešení, tohoto problému, pokud by se mělo někde použít produkčně bylo by zapotřebí daleko více optimalizovat).
 
-\textbf{OBSAH}
-
-Zde musí být definice, jak bude testováno a co má být přesně výsledkem.
-Vlastní testování a výsledky formou tabulek budou v podkapitole
-Zhodnocení výsledků testování je nejlépe slovně (zhodnocení předchozích tabulek) a pak jedna tabulka s přehledem řešení od jiných autorů s tím novým řešením (mělo by se ukázat, že to nové řešení je nejlepší)
-
-\textbf{ROZSAH}
-
-Rozsah je 1strana.
-
 \section{Conclusions / Závěry}
 
 V rámci této práce jsme si daly za cíl vytvořit aplikaci, která bude schopna uložit počítačová data na papír a poté je zpátky načíst formou naskenovaného bitmapového obrázku. Jedním z hlavních cílů, kterých jsme se celou dobu držely bylo to, aby data byla čitelná i člověkem, z tohoto důvodu jsme zvolily datovou reprezentaci pomocí písmen. Pro určení/klasifikaci jednotlivých písmen jsme použili konvoluční neuronovou síť, kterou jsme musely naučit správně rozeznávat znaky fontu Consolas. V ideálních případech bylo dosaženo velice dobrých výsledků při klasifikaci znaků (Testy využívají soubory s daty jejichž velikost odpovídá 10,5kB pokud přepočteme na počet písmen dostaneme přibližně 16500 písmen, pokud zohledníme že se všechny tato písmena podařilo korektně dekódovat, získáme velice slušnou úspěšnost naučení neuronové sítě). 
 
 V řešení vidím jistý potencionál. Pokud by se dotáhly různé neduhy tohoto řešení (malá hustota dat na jednu A4, rychlost dekódování, uživatelský komfort (konzolová aplikace se neobsluhuje příliš dobře),...) tak by se mohlo jednat o plnohodnotné řešení/alternativa k existujícímu řešení, pro zálohu dat na papír.
 
-Tady už se vyjádřit jen k tomu, že se podařilo najít (definovat) nový přístup k řešení problému a že byl i prakticky ověřen na modelovém případě. 
-Dobré je také diskutovat využitelnost nového řešení jak v aktuální oblasti problému (nejlépe včetně finančních či časových úspor), tak i v dalších oblastech (alespoň nastínit).
-Rozsah závěru je minimálně 10 řádků, maximálně 20 řádků.
-
-
-
-
-
-% conference papers do not normally have an appendix
-
-
-% use section* for acknowledgment
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
-
-
-% trigger a \newpage just before the given reference
-% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
-
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{PaperDataStorage}
+ATWOOD,~Jeff. The Paper Data Storage Option. 31. Července 2009 [Cit. 14. Leden 2019]. Dostupné z: https://blog.codinghorror.com/the-paper-data-storage-option/
+
+\bibitem{GrantTrebbin}
+TREBBIN,~Grant. Simple Data Backup with Paper Based QR Codes. 29. Květen 2015 [Cit. 14. Leden 2019]. Dostupné z: https://www.grant-trebbin.com/2015/05/encode-and-decode-file-backed-up-as.html  
+	
+\bibitem{DataGlyphsFreePatenstsOnline}
+BREIDENBACH,~Jeff a David~L.~HECHT. Foreground/background document processing with dataglyphs: United States Patent 6641053. 4. Listopad 2003 [Cit. 14. Leden 2019]. Dostupné z: http://www.freepatentsonline.com/6641053.html
+
+\bibitem{dataglyphs}
+DataGlyphs®: Embedding Digital Data. [Cit. 14. Leden 2019]. Dostupné z: http://www.microglyphs.com/english/html/dataglyphs.shtml
+	
+\bibitem{PaperBackup}
+paperbackup.py. 2017 [Cit. 14. Leden 2019]. Dostupné z: https://github.com/intra2net/paperbackup
+  
+\bibitem{PaperBak}
+YUSCHUK,~Oleh. PaperBak. 2007 [Cit. 14. Leden 2019]. Dostupné z: http://ollydbg.de/Paperbak/
+
+\bibitem{ScanningQrCodes}
+SINHA,~Utkarsh. Scanning QR Codes: Introduction. [Cit. 14. Leden 2019] Dostupné z: http://www.aishack.in/tutorials/scanning-qr-codes-1/
   
 \bibitem{Book:TheTypographicDeskReference}
 ROSENDORF,~Theodore. The typographic desk reference: TDR. New Castle, DE: Oak Knoll Books, 2009. ISBN 978-1-58456-231-3.
 
+\bibitem{RFC4648}
+Josefsson,~S. The Base16, Base32, and Base64 Data Encodings. Říjen 2006 [Cit. 14. Leden 2019]. Dostupné z: https://tools.ietf.org/html/rfc4648
+
+\bibitem{RFC3174}
+EASTLAKE,~D.~3rd a JONES~P. US Secure Hash Algorithm 1 (SHA1). Září 2001 [Cit. 14. Leden 2019]. Dostupné z: https://tools.ietf.org/html/rfc3174
+
+\bibitem{IEN137:LittleEndian}
+COHEN,~Danny IEN 137: On Holy Wars and a Plea for Peace. 1. Duben 1980 [Cit. 14. Leden 2019]. Dostupné z: https://www.ietf.org/rfc/ien/ien137.txt
+
+\bibitem{MITLicense}
+WANG,~Kevin. MIT License (Expat) Explained in Plain English. 2015 [Cit. 14. Leden 2019]. Dostupné z: https://tldrlegal.com/license/mit-license
+
+\bibitem{MicrosoftPublicLicense}
+WANG,~Kevin. Microsoft Public License (MS-PL) Explained in Plain English. 2015 [Cit. 14. Leden 2019]. Dostupné z: https://tldrlegal.com/license/microsoft-public-license-(ms-pl)
+
+\bibitem{ApacheLicense}
+The~Apache~Software~Foundation. Apache License, Version 2.0. Leden 2004 [Cit. 14. Leden 2019]. Dostupné z: http://www.apache.org/licenses/LICENSE-2.0
+
 \end{thebibliography}
 
-
-
-
-% that's all folks
 \end{document}
