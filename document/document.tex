@@ -46,13 +46,11 @@ abstraktem se rozumí 10 až 15 řádků popisujících stručně obsah vašeho 
 
 Abychom mohli data zapsat na papírové médium je zapotřebí počítačová data nějakým vhodným způsobem zakódovat, tak abychom je byly i schopni snadno rozkódovat. Můžeme zvolit různé metody zakódování dat od grafického, pro člověka ne příliš hezky čitelného, až po textového, který je člověk v případě potřeby schopen alespoň částečně interpretovat. Jako vhodné řešení vyplývá použít metodu, která v případě, že selže program určený k rekonstrukci dat, umožní data do počítače zadat i samotnému uživateli (jedná se o krajní případ, ke kterému by nemělo docházet). 
 
-Zvolíme-li tedy, že data budeme kódovat do textové podoby, tak aby byla ,,čitelná člověkem`` (například kódování binární dat do textové podoby pomocí kódování Base64, Base32,...), tak musíme také najít vhodný způsob jakým data budeme načítat zpátky do počítače. Jelikož máme data na papíře je nutné tyto obrazová/textová data přenést zpět do počítače za pomoci nějakého skenovacího zařízení, jehož výstupem je rastrový obrázek. Jakmile máme obrazová data naskenována v počítači můžeme začít s ,,automatizovanou`` rekonstrukcí těchto dat. Klasické OCR (optical character recognization) algoritmy nejsou pro tyto účely příliš vhodné, protože fungují spolehlivě hlavně pokud v textu, který dekódují existuje nějaký kontext (tj. data mají význam slov) a algoritmus je schopen v případě nejistoty rozhodnout, na základě ostatních znaků, nebo slov, který znak je v daném místě pravděpodobnější).
+Zvolíme-li tedy, že data budeme kódovat do textové podoby, tak aby byla ,,čitelná člověkem`` (například kódování binární dat do textové podoby pomocí kódování Base64, Base32,...), tak musíme také najít vhodný způsob jakým data budeme načítat zpátky do počítače. Jelikož máme data na papíře je nutné tyto obrazová/textová data přenést zpět do počítače za pomoci nějakého skenovacího zařízení, jehož výstupem je rastrový obrázek. Jakmile máme obrazová data naskenována v počítači můžeme začít s ,,automatizovanou`` rekonstrukcí těchto dat. Klasické OCR (optical character recognization) algoritmy nejsou pro tyto účely příliš vhodné \cite{RecognizationVehicleLicencePlates}, protože fungují spolehlivě hlavně pokud v textu, který dekódují existuje nějaký kontext (tj. data mají význam slov) a algoritmus je schopen v případě nejistoty rozhodnout, na základě ostatních znaků, nebo slov, který znak je v daném místě pravděpodobnější. V případě dekódování zálohovaných dat je ale nutné dosáhnout veliké spolehlivosti dekódování dat, protože i relativně vysoká spolehlivost 99\% by znamenala, že se data nemusí podařit správně dekódovat.
 
-Jelikož máme data v obrazové podobě a nemůžeme uplatnit algoritmy OCR, je zapotřebí aplikovat jiné řešení. Jako jedno z možných řešení je využití klasifikace jednotlivých písmen textu pomocí konvuločních neuronových sítí \cite{NIPS2010_4136}. Spolehlivost takovéhoto řešení bude závislá na kvalitě naučení neuronové sítě a přípravě/zpracováním vstupních dat před vstupem do klasifikačního procesu neuronové sítě.
+Jelikož máme data v obrazové podobě a nemůžeme uplatnit algoritmy OCR, je zapotřebí aplikovat jiné řešení. Jako jedno z možných řešení je využití klasifikace jednotlivých písmen textu pomocí konvuločních neuronových sítí \cite{NIPS2010_4136}\cite{doi:10.1080/2150704X.2018.1526424}\cite{SEO2019328}. Spolehlivost takovéhoto řešení bude závislá na kvalitě naučení neuronové sítě a přípravě/zpracováním vstupních dat před vstupem do klasifikačního procesu neuronové sítě.
 
 Při dekódování dat je nutné také mít informaci o tom, zda se podařilo data do dekódovat správně, nebo zda během klasifikace došlo k chybě a nějaké znaky (písmena a čísla) jsou dekódovány nesprávně a je nutné provést nějaké korekční kroky. K ověření integrity dat je vhodné použít nějakou metodu kontrolního součtu. Pro tento účel lze využít hashovacích funkcí, které spočítají hash (otisk) dat (například hashovací funkce MD5, SHA1,...). V případě, že se data budou lišit, tak tyto otisky budou navzájem různé (je nutné volit správnou metodu spočtení tohoto otisku, tak aby možnost kolize byla nepravděpodobná). Pokud po rekonstrukci dat, a následném spočtení kontrolního součtu bude kontrolní součet odpovídat, můžeme s téměř naprostou jistotu prohlásit, že data jsou dekódována správně. Kontrolní součet je zapotřebí vhodně uložit, tak aby byl pro počítač snadno a správně dekódovatelný. V dnešní době umějí počítače a chytré telefony snadno dekódovat data uložená do QR kódu (za předpokladu, že ukládáme relativně malé množství dat).
-
-% TODO 3-5 zdrojů
 
 \section{Problem definition / Definice problémů}
 
@@ -158,8 +156,17 @@ V řešení vidím jistý potencionál. Pokud by se dotáhly různé neduhy toho
 
 \begin{thebibliography}{1}
 	
+\bibitem{RecognizationVehicleLicencePlates}
+CHANDRA,~S. 2017 20TH International Conference of Computer and Information Technology (ICCIT): An automated system to detect and recognize vehicle license plates of Bangladesh. 22.-24. Prosinec 2017 [Cit. 15. Leden 2019]. ISBN: 978-1-5386-1150-0. 
+	
 \bibitem{NIPS2010_4136}
 NGIAM,~Jiquan a et al. Advances in Neural Information Processing Systems 23: Tiled convolutional neural networks. Curran Associates, Inc., 2010 [Cit. 14. Leden 2019]. str. 1279-1287. Dostupné z: http://papers.nips.cc/paper/4136-tiled-convolutional-neural-networks.pdf 
+
+\bibitem{doi:10.1080/2150704X.2018.1526424}
+ZHI,~Lu a et al. A dense convolutional neural network for hyperspectral image classification. Taylor \& Francis, 2019 [Cit. 15. Leden 2019]. str. 59-66. Dostupné z: https://doi.org.10.1080/2150704X.2018.1526424 
+
+\bibitem{SEO2019328}
+SEO,~Yian a Kyung-shik SHIN. Hierarchical convolutional neural networks for fashion image classification. 2019 [Cit. 15. Leden 2019]. str. 328-339. ISSN: 0957-4174. Dostupné z: https://doi.org/10.1016/j.eswa.2018.09.022
 
 \bibitem{PaperDataStorage}
 ATWOOD,~Jeff. The Paper Data Storage Option. 31. Července 2009 [Cit. 14. Leden 2019]. Dostupné z: https://blog.codinghorror.com/the-paper-data-storage-option/
