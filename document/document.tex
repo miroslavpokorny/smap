@@ -12,6 +12,8 @@
 \graphicspath{{./images/}}
 \DeclareGraphicsExtensions{.pdf}
 
+\usepackage{listings}
+
 \renewcommand\IEEEkeywordsname{Keywords}
 
 \addto{\captionsczech}{
@@ -134,9 +136,37 @@ Poslední knihovnou, kterou aplikace využívá, která stojí za zmínku je Six
 
 Aplikace je implementována tak, že v případě kódování dat předpokládá na vstupu název souboru, který má zakódovat, výstupem je pak pdf soubor, který může být vytištěn. V případě dekódování aplikace na vstupu předpokládá adresář, který obsahuje obrázky (každý obrázek reprezentuje jednu naskenovanou stránku, aktuální implementace předpokládá, že stránky nejsou příliš mnoho natočeny, tj. QR kód by měl být vlevo nahoře, a stránky by měla být vychýlena pouze minimálně). Aplikace poté postupně provede několik kroků. Nejprve je zapotřebí dekódovat QR kód a to hned ze dvou důvodů. Prvním důvodem je získání metadat a druhým je, jak již bylo zmíněno v předchozí kapitole, detekce tzv. finder patters v QR kódu, na základě kterých se detekuje úhel vychýlení stránky, který vznikl například při automatickém podávání papírů do skeneru při skenováním do počítače. Pro dekódování QR kódů se používá již výše zmíněná knihovna ZXing.Net. 
 
-Úhel vychýlení stránky se poté spočte tak, že se naleznou levé finder patterns v QR kódu, čímž získáme dva body v 2D prostoru. Pokud tyto dva body jsou rovnoběžné v ose Y, tak stránka s největší pravděpodobností není vychýlena/natočena. Pokud nejsou rovnoběžné jsme z těchto dvou bodů schopni spočítat délky odvěsen pravoúhlého trojúhelníku. Tyto strany lze poté využít k výpočtu úhlu vychýlení stránky pomocí goniometrické funkce tangens. To zda se jedná o natočení stránky po směru nebo proti směru hodinových ručiček se poté zjistí tak zda finder pattern umístěný na stránce výše je více nalevo (resp. napravo) než finder pattern umístěný níže.
+Úhel vychýlení stránky se poté spočte tak, že se naleznou levé finder patterns v QR kódu, čímž získáme dva body v 2D prostoru. Pokud tyto dva body jsou rovnoběžné v ose Y, tak stránka s největší pravděpodobností není vychýlena/natočena. Pokud nejsou rovnoběžné jsme z těchto dvou bodů schopni spočítat délky odvěsen pravoúhlého trojúhelníku. Tyto strany lze poté využít k výpočtu úhlu vychýlení stránky pomocí goniometrické funkce tangens. To zda se jedná o natočení stránky po směru nebo proti směru hodinových ručiček se poté zjistí tak zda finder pattern umístěný na stránce výše je více nalevo (resp. napravo) než finder pattern umístěný níže. Ukázka implementace je vidět na následující ukázce kódu \ref{code1}.
 
-% TODO listing ukázka spočtení úhlu tangens z finder patterns
+\lstset{language=[Sharp]C} 
+\begin{lstlisting}[basicstyle=\scriptsize,caption={Výpočet úhlu vychílení stránky pomocí finder patterns v QR kódu},label=code1]
+
+var bitmap = Image.FromFile(filePath) as Bitmap;
+var bitmapSource = new RGBLuminanceSource(
+   ImageHelper.ImageToByteArray(bitmap), 
+   bitmap.Width, 
+   bitmap.Height);
+var result = (new BarcodeReader()).Decode(bitmapSource);
+var points = result.ResultPoints.ToList();
+points.Sort((a, b) => a.X - b.X);
+var upperLeftPoint = points[0];
+var lowerLeftPoint = points[1];
+if (upperLeftPoint.Y > lowerLeftPoint.Y)
+{
+    var tmp = upperLeftPoint;
+    upperLeftPoint = lowerLeftPoint;
+    lowerLeftPoint = tmp;
+}
+var pageRotation = 
+    (Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) < 0.001 
+    ? 0 
+    : upperLeftPoint.X < lowerLeftPoint.X 
+        ? -1 
+        : 1) * Math.Tan(
+            Math.Abs(upperLeftPoint.X - lowerLeftPoint.X) / 
+            Math.Abs(upperLeftPoint.Y - lowerLeftPoint.Y)) * 
+            (180/Math.PI)
+\end{lstlisting}
 
 Další věc, ke které se umístění QR kódu použije je k označení oblasti s písmeny na stránce. Jak již bylo řečeno předpokládá se, že stránka má QR kód umístěný vlevo nahoře, z tohoto důvodu není nutné řešit nutnost rotace celé stránky (v tomto případě je myšlena rotace o 90\degree, 180\degree nebo 270\degree). Za předpokladu, že platí umístění QR kódu vlevo nahoře, můžeme na základě finder patterns spočítat horní hranici stránky, kde začíná oblast s písmeny, kterou poté využijeme při dalším zpracování.
 
