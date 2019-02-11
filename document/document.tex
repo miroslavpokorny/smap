@@ -151,6 +151,21 @@ Jelikož řešení PaperBak využívá pro zapsání dat matice ,,čtverečků``
 
 Pokud porovnáme rychlost dekódování dopadne řešení PaperBak výrazně lépe, protože nepotřebuje využívat relativně složitých výpočtů neuronových sítí na straně jedné a je daleko lépe optimalizované, nežli řešení implementované v rámci této práce (řešení implementované v rámci této práce slouží spíše jako prototyp/demonstrace možného řešení, tohoto problému, pokud by se mělo někde použít produkčně bylo by zapotřebí daleko více optimalizovat).
 
+Výše popsané porovnání shrnuje následující tabulka \ref{tabulka:porovnani_reseni}.
+
+\begin{table}[]
+	\caption{Porovnání implementovaného řešení s řešením PaperBak}
+	\label{tabulka:porovnani_reseni}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		& PaperBak & Vlastní řešení \\ \hline
+		Max. množství dat na 1 A4            & 3,5MB    & 10,5kB  \\ \hline
+		Data zakódována v textu              & Ne       & Ano     \\ \hline
+		Data zakódována do obrázku (kódu)    & Ano      & Ne      \\ \hline
+		Možnost snadného dekódování člověkem & Ne       & Ano     \\ \hline
+	\end{tabular}
+\end{table}
+
 \section{Conclusions / Závěry}
 
 V rámci této práce jsme si daly za cíl vytvořit aplikaci, která bude schopna uložit počítačová data na papír a poté je zpátky načíst formou naskenovaného bitmapového obrázku. Jedním z hlavních cílů, kterých jsme se celou dobu držely bylo to, aby data byla čitelná i člověkem, z tohoto důvodu jsme zvolily datovou reprezentaci pomocí písmen. Pro určení/klasifikaci jednotlivých písmen jsme použili konvoluční neuronovou síť, kterou jsme musely naučit správně rozeznávat znaky fontu Consolas. V ideálních případech bylo dosaženo velice dobrých výsledků při klasifikaci znaků (Testy využívají soubory s daty jejichž velikost odpovídá 10,5kB pokud přepočteme na počet písmen dostaneme přibližně 16500 písmen, pokud zohledníme že se všechny tato písmena podařilo korektně dekódovat, získáme velice slušnou úspěšnost naučení neuronové sítě). 
