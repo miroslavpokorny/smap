@@ -8,6 +8,10 @@
 \usepackage[utf8]{inputenc}   % pro unicode UTF-8
 \usepackage{gensymb}
 
+\usepackage[pdftex]{graphicx}
+\graphicspath{{./images/}}
+\DeclareGraphicsExtensions{.pdf}
+
 \renewcommand\IEEEkeywordsname{Keywords}
 
 \addto{\captionsczech}{
@@ -107,6 +111,15 @@ Jednou z nejdůležitějších věcí, aby vše fungovalo, je správné naučen�
 
 Než je písmeno předáno na vstup neuronové sítě je s ním provedeno vždy několik kroků. Nejprve je detekována oblast (čtverec), ve kterém se písmeno přesně nachází, obrázek je pak touto oblastí oříznut. Po oříznutí se změní velikost obrázku na standardní velikost 32x32 pixelů, na kterou je neuronová síť připravena. Jako poslední věc, než je obrázek předán neuronové síti je prahování (tj. všechny pixely, které mají hodnotu menší než 128 budou zcela černé a všechny ostatní zcela bílé. Výsledkem je tedy obrázek, který je složen pouze z pixelů zcela černých a nebo zcela bílých). Jakmile je obrázek předzpracován, tak může být předán na vstup neuronové sítě. 
 
+Zpracovávání obrázku je naznačeno ve vývojovém diagramu na obrázku \ref{vyvojovy_diagram_zpracovani obrazku}.
+
+\begin{figure}
+	\centering
+	\includegraphics[]{FlowChartImageProcessing}
+	\caption{Vývojový diagram znázorňující předzpracování obrázku, před klasifikací neuronovou sítí}
+	\label{vyvojovy_diagram_zpracovani obrazku}
+\end{figure}
+
 Výsledkem této pomocné aplikace je soubor network.xml, s naučenou neuronovou sítí, který je poté použit (načten) v samotné aplikaci. Část funkcionality této aplikace je vytažena do dalšího samostatného projektu (knihovny) SmapCommon, tak aby aplikace, která bude písmena později dekódovat mohla využít stejného postupu, který byl využit pro zpracování obrázků, před předáním síti k učení (tj. funkce použité pro úpravy obrázků, budou používat stejně obě dvě aplikace, použitím knihovny se zajistí konzistence mezi oběma projekty).
 
 Hlavní částí tohoto projektu je projekt smap, který implementuje samotné zakódovávání a dekódování dat. Jedná se o konzolovou aplikaci, která pracuje ve dvou režimech, kódování a dekódování. Pro zakódování dat na papír dle popisu z předchozí kapitoly, bylo zapotřebí najít a použít další vhodné knihovny, které by zajistili potřebnou funkcionalitu.
@@ -122,6 +135,8 @@ Poslední knihovnou, kterou aplikace využívá, která stojí za zmínku je Six
 Aplikace je implementována tak, že v případě kódování dat předpokládá na vstupu název souboru, který má zakódovat, výstupem je pak pdf soubor, který může být vytištěn. V případě dekódování aplikace na vstupu předpokládá adresář, který obsahuje obrázky (každý obrázek reprezentuje jednu naskenovanou stránku, aktuální implementace předpokládá, že stránky nejsou příliš mnoho natočeny, tj. QR kód by měl být vlevo nahoře, a stránky by měla být vychýlena pouze minimálně). Aplikace poté postupně provede několik kroků. Nejprve je zapotřebí dekódovat QR kód a to hned ze dvou důvodů. Prvním důvodem je získání metadat a druhým je, jak již bylo zmíněno v předchozí kapitole, detekce tzv. finder patters v QR kódu, na základě kterých se detekuje úhel vychýlení stránky, který vznikl například při automatickém podávání papírů do skeneru při skenováním do počítače. Pro dekódování QR kódů se používá již výše zmíněná knihovna ZXing.Net. 
 
 Úhel vychýlení stránky se poté spočte tak, že se naleznou levé finder patterns v QR kódu, čímž získáme dva body v 2D prostoru. Pokud tyto dva body jsou rovnoběžné v ose Y, tak stránka s největší pravděpodobností není vychýlena/natočena. Pokud nejsou rovnoběžné jsme z těchto dvou bodů schopni spočítat délky odvěsen pravoúhlého trojúhelníku. Tyto strany lze poté využít k výpočtu úhlu vychýlení stránky pomocí goniometrické funkce tangens. To zda se jedná o natočení stránky po směru nebo proti směru hodinových ručiček se poté zjistí tak zda finder pattern umístěný na stránce výše je více nalevo (resp. napravo) než finder pattern umístěný níže.
+
+% TODO listing ukázka spočtení úhlu tangens z finder patterns
 
 Další věc, ke které se umístění QR kódu použije je k označení oblasti s písmeny na stránce. Jak již bylo řečeno předpokládá se, že stránka má QR kód umístěný vlevo nahoře, z tohoto důvodu není nutné řešit nutnost rotace celé stránky (v tomto případě je myšlena rotace o 90\degree, 180\degree nebo 270\degree). Za předpokladu, že platí umístění QR kódu vlevo nahoře, můžeme na základě finder patterns spočítat horní hranici stránky, kde začíná oblast s písmeny, kterou poté využijeme při dalším zpracování.
 
